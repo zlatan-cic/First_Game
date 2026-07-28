@@ -1,17 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Player.h"
 
 class Game
 {
-public:
-	Game();
-	void run();
-
 private:
 	void processEvents();
-	void update();
+	void update(float dt);
 	void render();
 
 	sf::RenderWindow m_Window;
 	sf::CircleShape m_Shape;
+
+	Player player;
+	sf::RectangleShape floor;
+
+public:
+	Game();
+	void run();
+
+
 };

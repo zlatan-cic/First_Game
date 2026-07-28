@@ -2,19 +2,22 @@
 
 Game::Game() :m_Window(sf::VideoMode({ 800, 600 }), "SFML test game loop")
 {
-	
-	m_Shape.setRadius(50.f);
-	m_Shape.setFillColor(sf::Color::Blue);
-	m_Shape.setPosition({ 350.f, 250.f });
+	floor.setSize({ 800.f, 50.f });
+	floor.setPosition({ 0.f, 550.f });
+	floor.setFillColor(sf::Color::Green);
 }
 
 void Game::run()
 {
+	sf::Clock clock;
+
 	// This is a core of game loop!!!!
 	while (m_Window.isOpen())
 	{
+		float dt = clock.restart().asSeconds();
+
 		processEvents();
-		update();
+		update(dt);
 		render();
 	}
 }
@@ -39,14 +42,17 @@ void Game::processEvents()
 	}
 }
 
-void Game::update()
+void Game::update(float dt)
 {
 	// Game logic here
+	player.update(dt);
 }
 
 void Game::render()
 {
 	m_Window.clear();
-	m_Window.draw(m_Shape);
+	m_Window.draw(floor);
+	
+	player.render(m_Window);
 	m_Window.display();
 }
