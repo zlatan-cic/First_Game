@@ -12,6 +12,12 @@ private:
 
 	sf::Vector2f velocity;
 
+	bool isCrouching;
+	float standardHeight;
+	float crouchingHeight;
+
+	
+
 	bool isGrounded;
 
 public:

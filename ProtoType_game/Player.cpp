@@ -5,6 +5,9 @@ Player::Player()
 		 gravity(900.f),
 		 jumpForce(-500.f),
 		 velocity(0.f, 0.f),
+		 standardHeight(50.f),
+		 crouchingHeight(25.f),
+		 isCrouching(false),
 		 isGrounded(false)
 {
 	shape.setSize({ 50.f,50.f });
@@ -18,22 +21,45 @@ void Player::update(float dt)
 
 	velocity.x = 0.f;
 
+	// Left
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		movement.x -= speed * dt;
 	}
 
+	// Right
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 	{
 		movement.x += speed * dt;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && isGrounded)
+	// Chrouch
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isGrounded && !isCrouching)
+	{
+		const float bottom = shape.getPosition().y + shape.getSize().y;
+		shape.setSize({ shape.getSize().x, crouchingHeight });
+		shape.setPosition({ shape.getPosition().x, bottom - crouchingHeight});
+
+		isCrouching = true;
+	}
+	else if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isCrouching)
+	{
+		const float bottom = shape.getPosition().y + shape.getSize().y;
+
+		shape.setSize({ shape.getSize().x, standardHeight });
+		shape.setPosition({ shape.getPosition().x, bottom - standardHeight });
+
+		isCrouching = false;
+	}
+
+	// Jump
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && isGrounded && !isCrouching)
 	{
 		velocity.y = jumpForce;
 		isGrounded = false;
 	}
 
+	/// Gravity
 	velocity.y += gravity * dt;
 	shape.move(velocity * dt);
 
