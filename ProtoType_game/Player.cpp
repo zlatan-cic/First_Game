@@ -7,7 +7,7 @@ Player::Player()
 		 velocity(0.f, 0.f),
 		 standardHeight(50.f),
 		 crouchingHeight(25.f),
-		 currentState(PlayerState::Faling)
+		 currentState(PlayerState::Falling)
 {
 	shape.setSize({ 50.f,50.f });
 	shape.setFillColor(sf::Color::White); /// later...

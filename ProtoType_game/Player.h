@@ -7,7 +7,7 @@ enum class PlayerState
 	Moving,
 	Crouching,
 	Jumping,
-	Faling
+	Falling
 
 };
 
