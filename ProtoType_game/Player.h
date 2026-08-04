@@ -35,8 +35,12 @@ private:
 public:
 	Player();
 
+	void resetInput();
+
 	void handleAction(PlayerAction action);
+
 	void update(float dt);
 	void render(sf::RenderWindow& m_Window);
+
 
 };

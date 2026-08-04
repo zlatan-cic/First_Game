@@ -1,10 +1,24 @@
 #include "Game.h"
 
-Game::Game() :m_Window(sf::VideoMode({ 800, 600 }), "SFML test game loop")
+Game::Game()
+	: m_Window(sf::VideoMode({ 800, 600 }), "SFML test game loop"),
+	inputSystem(PlayerControls{
+		sf::Keyboard::Key::A,
+		sf::Keyboard::Key::D,
+		sf::Keyboard::Key::W,
+		sf::Keyboard::Key::S
+		})
 {
 	floor.setSize({ 800.f, 50.f });
 	floor.setPosition({ 0.f, 550.f });
 	floor.setFillColor(sf::Color::Green);
+
+	inputSystem.setActionCallback(
+		[this](PlayerAction action)
+		{
+			player.handleAction(action);
+		}
+	);
 }
 
 void Game::run()
@@ -44,7 +58,8 @@ void Game::processEvents()
 
 void Game::update(float dt)
 {
-	// Game logic here
+	player.resetInput();
+	inputSystem.update();
 	player.update(dt);
 }
 

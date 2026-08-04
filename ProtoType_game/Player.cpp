@@ -15,8 +15,6 @@ Player::Player()
 	shape.setPosition({ 150.f,450.f });
 }
 
-
-
 bool Player::isGrounded() const
 {
 	return  currentState == PlayerState::Idle ||
@@ -84,44 +82,18 @@ void Player::handleAction(PlayerAction action)
 	}
 }
 
-void Player::update(float dt)
+void Player::resetInput()
 {
 	movement.x = 0.f;
+}
 
-	/*
-		 Temporary input handling
-	*/
-	// left
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-	{
-		handleAction(PlayerAction::MoveLeft);
-	}
-
-	// right
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-	{
-		handleAction(PlayerAction::MoveRight);
-	}
-
-	// crouch
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-	{
-		handleAction(PlayerAction::CrouchStart);
-	}
-	else
-	{
-		handleAction(PlayerAction::CrouchEnd);
-	}
-
-	// jump
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-	{
-		handleAction(PlayerAction::Jump);
-	}
-
-	/// Gravity
+void Player::update(float dt)
+{
+	// Gravity
 	velocity.y += gravity * dt;
-	if (velocity.y > 0.f && currentState == PlayerState::Jumping)
+
+	if (velocity.y > 0.f &&
+		currentState == PlayerState::Jumping)
 	{
 		currentState = PlayerState::Falling;
 	}

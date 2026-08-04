@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "InputSystem.h"
+
+
 
 class Game
 {
@@ -13,6 +16,8 @@ private:
 	sf::CircleShape m_Shape;
 
 	Player player;
+	InputSystem inputSystem;
+
 	sf::RectangleShape floor;
 
 public:
