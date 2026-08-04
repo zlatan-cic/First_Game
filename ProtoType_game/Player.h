@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "PlayerAction.h"
 
 enum class PlayerState
 {
@@ -19,6 +20,7 @@ private:
 	float speed;
 	float gravity;
 	float jumpForce;
+	sf::Vector2f movement;
 
 	sf::Vector2f velocity;
 
@@ -33,6 +35,7 @@ private:
 public:
 	Player();
 
+	void handleAction(PlayerAction action);
 	void update(float dt);
 	void render(sf::RenderWindow& m_Window);
 
