@@ -1,6 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+enum class PlayerState
+{
+	Idle,
+	Moving,
+	Crouching,
+	Jumping,
+	Faling
+
+};
+
 class Player
 {
 private:
@@ -12,13 +22,10 @@ private:
 
 	sf::Vector2f velocity;
 
-	bool isCrouching;
 	float standardHeight;
 	float crouchingHeight;
 
-	
-
-	bool isGrounded;
+	PlayerState currentState;
 
 public:
 	Player();
