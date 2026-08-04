@@ -14,6 +14,18 @@ Player::Player()
 	shape.setPosition({ 150.f,450.f });
 }
 
+bool Player::isGrounded() const
+{
+	return  currentState == PlayerState::Idle ||
+			currentState == PlayerState::Moving ||
+			currentState == PlayerState::Crouching;
+}
+
+bool Player::isCrouching() const
+{
+	return currentState == PlayerState::Crouching;
+}
+
 void Player::update(float dt)
 {
 	sf::Vector2 movement(0.0f, 0.0f);
@@ -33,34 +45,39 @@ void Player::update(float dt)
 	}
 
 	// Chrouch
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isGrounded && !isCrouching)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isGrounded() && !isCrouching())
 	{
 		const float bottom = shape.getPosition().y + shape.getSize().y;
 		shape.setSize({ shape.getSize().x, crouchingHeight });
 		shape.setPosition({ shape.getPosition().x, bottom - crouchingHeight});
 
-		isCrouching = true;
+
+		currentState = PlayerState::Crouching;
 	}
-	else if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isCrouching)
+	else if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && isCrouching())
 	{
 		const float bottom = shape.getPosition().y + shape.getSize().y;
 
 		shape.setSize({ shape.getSize().x, standardHeight });
 		shape.setPosition({ shape.getPosition().x, bottom - standardHeight });
 
-		isCrouching = false;
+		currentState = PlayerState::Idle;
 	}
 
 	// Jump
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && isGrounded && !isCrouching)
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && isGrounded() && !isCrouching())
 	{
 		velocity.y = jumpForce;
-		isGrounded = false;
+		currentState = PlayerState::Jumping;
 	}
 
 	/// Gravity
 	velocity.y += gravity * dt;
-	shape.move(velocity * dt);
+	if (velocity.y > 0.f && currentState == PlayerState::Jumping)
+	{
+		currentState = PlayerState::Falling;
+	}
+	shape.move({ 0.f, velocity.y * dt });
 
 	const float floorY = 550.f;
 	if (shape.getPosition().y + shape.getSize().y >= floorY)
@@ -71,11 +88,16 @@ void Player::update(float dt)
 		});
 
 		velocity.y = 0.f;
-		isGrounded = true;
+		if (!isCrouching())
+		{
+			currentState = PlayerState::Idle;
+		}
 	}
 
 	shape.move(movement);
 }
+
+
 
 void Player::render(sf::RenderWindow& m_Window)
 {

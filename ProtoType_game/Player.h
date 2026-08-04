@@ -27,6 +27,9 @@ private:
 
 	PlayerState currentState;
 
+	bool isGrounded() const;
+	bool isCrouching() const;
+
 public:
 	Player();
 
