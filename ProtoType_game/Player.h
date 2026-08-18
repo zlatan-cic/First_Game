@@ -2,15 +2,22 @@
 #include <SFML/Graphics.hpp>
 #include "PlayerAction.h"
 
-enum class PlayerState
+enum class HorizontalPlayerState
 {
-	Idle,
-	Moving,
-	Crouching,
-	Jumping,
-	Falling
-
+	Standing,
+	MovingLeft,
+	MovingRight
 };
+
+enum class VerticalPlayerState
+{
+	Standing,
+	Jumping,
+	Falling,
+	Crouching
+};
+
+
 
 class Player
 {
@@ -27,7 +34,8 @@ private:
 	float standardHeight;
 	float crouchingHeight;
 
-	PlayerState currentState;
+	HorizontalPlayerState horizontalState;
+	VerticalPlayerState	verticalState;
 
 	bool isGrounded() const;
 	bool isCrouching() const;

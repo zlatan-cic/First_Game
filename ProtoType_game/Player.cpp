@@ -8,7 +8,8 @@ Player::Player()
 		velocity(0.f, 0.f),
 		standardHeight(50.f),
 		crouchingHeight(25.f),
-		currentState(PlayerState::Falling)
+		horizontalState(HorizontalPlayerState::Standing),
+		verticalState(VerticalPlayerState::Falling)
 {
 	shape.setSize({ 50.f,50.f });
 	shape.setFillColor(sf::Color::White); /// later...
@@ -17,14 +18,12 @@ Player::Player()
 
 bool Player::isGrounded() const
 {
-	return  currentState == PlayerState::Idle ||
-			currentState == PlayerState::Moving ||
-			currentState == PlayerState::Crouching;
+	return verticalState == VerticalPlayerState::Crouching || verticalState == VerticalPlayerState::Standing;
 }
 
 bool Player::isCrouching() const
 {
-	return currentState == PlayerState::Crouching;
+	return verticalState == VerticalPlayerState::Crouching;
 }
 
 void Player::handleAction(PlayerAction action)
@@ -32,18 +31,27 @@ void Player::handleAction(PlayerAction action)
 	switch (action)
 	{
 	case PlayerAction::MoveLeft:
-		movement.x -= speed;
+		if (!isCrouching())
+		{
+			movement.x -= speed;
+			horizontalState = HorizontalPlayerState::MovingLeft;
+		}
 		break;
 
 	case PlayerAction::MoveRight:
-		movement.x += speed;
+		if (!isCrouching())
+		{
+			movement.x += speed;
+			horizontalState = HorizontalPlayerState::MovingRight;
+		}
 		break;
 
 	case PlayerAction::Jump:
+		
 		if (isGrounded() && !isCrouching())
 		{
 			velocity.y = jumpForce;
-			currentState = PlayerState::Jumping;
+			verticalState = VerticalPlayerState::Jumping;
 		}
 		break;
 
@@ -56,7 +64,7 @@ void Player::handleAction(PlayerAction action)
 
 			shape.setPosition({ shape.getPosition().x, bottom - crouchingHeight });
 
-			currentState = PlayerState::Crouching;
+			verticalState = VerticalPlayerState::Crouching;
 		}
 		break;
 
@@ -76,7 +84,7 @@ void Player::handleAction(PlayerAction action)
 				});
 
 
-			currentState = PlayerState::Idle;
+			verticalState = VerticalPlayerState::Standing;
 		}
 		break;
 	}
@@ -85,6 +93,7 @@ void Player::handleAction(PlayerAction action)
 void Player::resetInput()
 {
 	movement.x = 0.f;
+	horizontalState = HorizontalPlayerState::Standing;
 }
 
 void Player::update(float dt)
@@ -93,9 +102,9 @@ void Player::update(float dt)
 	velocity.y += gravity * dt;
 
 	if (velocity.y > 0.f &&
-		currentState == PlayerState::Jumping)
+		verticalState == VerticalPlayerState::Jumping)
 	{
-		currentState = PlayerState::Falling;
+		verticalState = VerticalPlayerState::Falling;
 	}
 
 	// horizontal movement
@@ -118,7 +127,7 @@ void Player::update(float dt)
 
 		if (!isCrouching())
 		{
-			currentState = PlayerState::Idle;
+			verticalState = VerticalPlayerState::Standing;
 		}
 	}
 
