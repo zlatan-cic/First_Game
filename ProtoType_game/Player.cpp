@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player()
 	    :speed(250.f),
@@ -26,6 +27,41 @@ bool Player::isCrouching() const
 	return verticalState == VerticalPlayerState::Crouching;
 }
 
+bool Player::tryVerticalStateTransition(VerticalPlayerState nextState)
+{
+	if (verticalState == VerticalPlayerState::Standing && nextState == VerticalPlayerState::Jumping)
+	{
+		verticalState = nextState;
+		return true;
+	}
+	else if(verticalState == VerticalPlayerState::Falling && nextState == VerticalPlayerState::Standing)
+	{
+		verticalState = nextState;
+		return true;
+	}
+	else if(verticalState == VerticalPlayerState::Jumping && nextState == VerticalPlayerState::Falling)
+	{
+		verticalState = nextState;
+		return true;
+	}
+	else if(verticalState == VerticalPlayerState::Standing && nextState == VerticalPlayerState::Crouching)
+	{
+		verticalState = nextState;
+		return true;
+	}
+	else if(verticalState == VerticalPlayerState::Crouching && nextState == VerticalPlayerState::Standing)
+	{
+		verticalState = nextState;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
+
+
 void Player::handleAction(PlayerAction action)
 {
 	switch (action)
@@ -35,6 +71,7 @@ void Player::handleAction(PlayerAction action)
 		{
 			movement.x -= speed;
 			horizontalState = HorizontalPlayerState::MovingLeft;
+			std::cout << "MoveLeft!!!\n";
 		}
 		break;
 
@@ -43,48 +80,47 @@ void Player::handleAction(PlayerAction action)
 		{
 			movement.x += speed;
 			horizontalState = HorizontalPlayerState::MovingRight;
+			std::cout << "MoveRight!!!\n";
 		}
 		break;
 
 	case PlayerAction::Jump:
-		
-		if (isGrounded() && !isCrouching())
-		{
-			velocity.y = jumpForce;
-			verticalState = VerticalPlayerState::Jumping;
-		}
+			if (tryVerticalStateTransition(VerticalPlayerState::Jumping))
+			{
+				velocity.y = jumpForce;
+				std::cout << "State Jump!!!\n";
+			}
 		break;
 
 	case PlayerAction::CrouchStart:
-		if (isGrounded() && !isCrouching())
+
+		if (tryVerticalStateTransition(VerticalPlayerState::Crouching))
 		{
-			const float bottom =
-				shape.getPosition().y + shape.getSize().y;
+			const float bottom = shape.getPosition().y + shape.getSize().y;
+
 			shape.setSize({ shape.getSize().x, crouchingHeight });
-
 			shape.setPosition({ shape.getPosition().x, bottom - crouchingHeight });
-
-			verticalState = VerticalPlayerState::Crouching;
+			std::cout << "CrouchStart!!!\n";
 		}
-		break;
-
+		break; 
 	case PlayerAction::CrouchEnd:
+		/*if (tryVerticalStateTransition(VerticalPlayerState::Standing))
+		{
+			const float bottom = shape.getPosition().y + shape.getSize().y;
+			shape.setSize({ shape.getSize().x, standardHeight });
+			shape.setPosition({ shape.getPosition().x, bottom - standardHeight });
+			std::cout << "CrouchEnd!!!\n";
+		}*/
 		if (isCrouching())
 		{
-			const float bottom =
-				shape.getPosition().y + shape.getSize().y;
-			shape.setSize({
-				shape.getSize().x , 
-				standardHeight
-			});
-			
-			shape.setPosition({
-				shape.getPosition().x,
-				bottom - standardHeight
-				});
+			if (tryVerticalStateTransition(VerticalPlayerState::Standing))
+			{
+				const float bottom = shape.getPosition().y + shape.getSize().y;
 
-
-			verticalState = VerticalPlayerState::Standing;
+				shape.setSize({ shape.getSize().x, standardHeight });
+				shape.setPosition({ shape.getPosition().x, bottom - standardHeight });
+				std::cout << "CrouchEnd!!!\n";
+			}
 		}
 		break;
 	}
@@ -101,10 +137,9 @@ void Player::update(float dt)
 	// Gravity
 	velocity.y += gravity * dt;
 
-	if (velocity.y > 0.f &&
-		verticalState == VerticalPlayerState::Jumping)
+	if (velocity.y > 0.f && verticalState == VerticalPlayerState::Jumping)
 	{
-		verticalState = VerticalPlayerState::Falling;
+		tryVerticalStateTransition(VerticalPlayerState::Falling);
 	}
 
 	// horizontal movement
@@ -127,7 +162,7 @@ void Player::update(float dt)
 
 		if (!isCrouching())
 		{
-			verticalState = VerticalPlayerState::Standing;
+			tryVerticalStateTransition(VerticalPlayerState::Standing);
 		}
 	}
 
