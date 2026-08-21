@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "InputSystem.h"
+#include "PlayerController.h"
 
 
 
@@ -17,6 +18,7 @@ private:
 
 	Player player;
 	InputSystem inputSystem;
+	PlayerController playerController;
 
 	sf::RectangleShape floor;
 

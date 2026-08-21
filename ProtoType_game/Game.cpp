@@ -7,7 +7,8 @@ Game::Game()
 		sf::Keyboard::Key::D,
 		sf::Keyboard::Key::W,
 		sf::Keyboard::Key::S
-		})
+		}),
+	playerController(player)
 {
 	floor.setSize({ 800.f, 50.f });
 	floor.setPosition({ 0.f, 550.f });
@@ -16,7 +17,7 @@ Game::Game()
 	inputSystem.setActionCallback(
 		[this](PlayerAction action)
 		{
-			player.handleAction(action);
+			playerController.handleAction(action);
 		}
 	);
 }
