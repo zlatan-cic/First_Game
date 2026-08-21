@@ -60,6 +60,35 @@ bool Player::tryVerticalStateTransition(VerticalPlayerState nextState)
 	}
 	
 }
+bool Player::tryHorizontalStateTransition(HorizontalPlayerState nextState)
+{
+	if (horizontalState == HorizontalPlayerState::Standing && nextState == HorizontalPlayerState::MovingRight)
+	{
+		horizontalState = nextState;
+		return true;
+	}
+	else if (horizontalState == HorizontalPlayerState::Standing && nextState == HorizontalPlayerState::MovingLeft)
+	{
+		horizontalState = nextState;
+		return true;
+	}
+	else if (horizontalState == HorizontalPlayerState::MovingLeft && nextState == HorizontalPlayerState::Standing)
+	{
+		horizontalState = nextState;
+
+		return true;
+	}
+	else if (horizontalState == HorizontalPlayerState::MovingRight && nextState == HorizontalPlayerState::Standing)
+	{
+		horizontalState = nextState;
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
 
 
 void Player::handleAction(PlayerAction action)
@@ -70,7 +99,7 @@ void Player::handleAction(PlayerAction action)
 		if (!isCrouching())
 		{
 			movement.x -= speed;
-			horizontalState = HorizontalPlayerState::MovingLeft;
+			tryHorizontalStateTransition(HorizontalPlayerState::MovingLeft);
 			std::cout << "MoveLeft!!!\n";
 		}
 		break;
@@ -79,7 +108,7 @@ void Player::handleAction(PlayerAction action)
 		if (!isCrouching())
 		{
 			movement.x += speed;
-			horizontalState = HorizontalPlayerState::MovingRight;
+			tryHorizontalStateTransition(HorizontalPlayerState::MovingRight);
 			std::cout << "MoveRight!!!\n";
 		}
 		break;
@@ -129,7 +158,7 @@ void Player::handleAction(PlayerAction action)
 void Player::resetInput()
 {
 	movement.x = 0.f;
-	horizontalState = HorizontalPlayerState::Standing;
+	tryHorizontalStateTransition(HorizontalPlayerState::Standing);
 }
 
 void Player::update(float dt)

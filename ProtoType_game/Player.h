@@ -38,6 +38,7 @@ private:
 	VerticalPlayerState	verticalState;
 
 	bool tryVerticalStateTransition(VerticalPlayerState nextState);
+	bool tryHorizontalStateTransition(HorizontalPlayerState nextState);
 
 	bool isGrounded() const;
 	bool isCrouching() const;
