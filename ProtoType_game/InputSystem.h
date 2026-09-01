@@ -1,17 +1,9 @@
 #pragma once
 #include <SFML/Window/Keyboard.hpp>
 #include <functional>
-
+#include "PlayerControls.h"
 #include "PlayerAction.h"
 
-
-struct PlayerControls
-{
-	sf::Keyboard::Key moveLeft;
-	sf::Keyboard::Key moveRight;
-	sf::Keyboard::Key jump;
-	sf::Keyboard::Key crouch;
-};
 
 class InputSystem
 {

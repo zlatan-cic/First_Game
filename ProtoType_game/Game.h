@@ -1,30 +1,34 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+
 #include "Player.h"
 #include "InputSystem.h"
 #include "PlayerController.h"
 
-
-
 class Game
 {
 private:
-	void processEvents();
-	void update(float dt);
-	void render();
+    void processEvents();
+    void update(float dt);
+    void render();
 
-	sf::RenderWindow m_Window;
-	sf::CircleShape m_Shape;
+    sf::RenderWindow m_Window;
 
-	Player player;
-	InputSystem inputSystem;
-	PlayerController playerController;
+    // Player 1
+    Player player1;
+    InputSystem inputSystem1;
+    PlayerController playerController1;
 
-	sf::RectangleShape floor;
+    // Player 2
+    Player player2;
+    InputSystem inputSystem2;
+    PlayerController playerController2;
+
+    sf::RectangleShape floor;
 
 public:
-	Game();
-	void run();
+    Game();
 
-
+    void run();
 };

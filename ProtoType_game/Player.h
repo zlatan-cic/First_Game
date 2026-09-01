@@ -1,57 +1,56 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "PlayerAction.h"
 
 enum class HorizontalPlayerState
 {
-	Standing,
-	MovingLeft,
-	MovingRight
+    Standing,
+    MovingLeft,
+    MovingRight
 };
 
 enum class VerticalPlayerState
 {
-	Standing,
-	Jumping,
-	Falling,
-	Crouching
+    Standing,
+    Jumping,
+    Falling,
+    Crouching
 };
-
-
 
 class Player
 {
 private:
-	sf::RectangleShape shape;
+    sf::RectangleShape shape;
 
-	float speed;
-	float gravity;
-	float jumpForce;
-	sf::Vector2f movement;
+    float speed;
+    float gravity;
+    float jumpForce;
 
-	sf::Vector2f velocity;
+    sf::Vector2f movement;
+    sf::Vector2f velocity;
 
-	float standardHeight;
-	float crouchingHeight;
+    float standardHeight;
+    float crouchingHeight;
 
-	HorizontalPlayerState horizontalState;
-	VerticalPlayerState	verticalState;
+    HorizontalPlayerState horizontalState;
+    VerticalPlayerState verticalState;
 
-	bool tryVerticalStateTransition(VerticalPlayerState nextState);
-	bool tryHorizontalStateTransition(HorizontalPlayerState nextState);
+    bool tryVerticalStateTransition(VerticalPlayerState nextState);
+    bool tryHorizontalStateTransition(HorizontalPlayerState nextState);
 
-	bool isGrounded() const;
-	bool isCrouching() const;
+    bool isGrounded() const;
+    bool isCrouching() const;
 
 public:
-	Player();
+    Player(sf::Vector2f startPosition);
 
-	void resetInput();
+    void resetInput();
 
-	void handleAction(PlayerAction action);
+    void moveLeft();
+    void moveRight();
+    void jump();
+    void startCrouch();
+    void stopCrouch();
 
-	void update(float dt);
-	void render(sf::RenderWindow& m_Window);
-
-
+    void update(float dt);
+    void render(sf::RenderWindow& m_Window);
 };
