@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "InputSystem.h"
 #include "PlayerController.h"
+#include <vector>
 
 class Game
 {
@@ -25,7 +26,8 @@ private:
     InputSystem inputSystem2;
     PlayerController playerController2;
 
-    sf::RectangleShape floor;
+    //sf::RectangleShape floor;
+    std::vector<sf::RectangleShape> platforms; // test
 
 public:
     Game();

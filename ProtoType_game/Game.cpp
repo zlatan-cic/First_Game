@@ -7,7 +7,8 @@ Game::Game()
     ),
 
     // PLAYER 1
-    player1({ 150.f, 450.f }),
+    player1({ 150.f, 450.f }, sf::Color::White),
+    
 
     inputSystem1(PlayerControls{
         sf::Keyboard::Key::A,
@@ -19,7 +20,7 @@ Game::Game()
     playerController1(player1),
 
     // PLAYER 2
-    player2({ 600.f, 450.f }),
+    player2({ 600.f, 450.f }, sf::Color::Red),
 
     inputSystem2(PlayerControls{
         sf::Keyboard::Key::Left,
@@ -31,9 +32,26 @@ Game::Game()
     playerController2(player2)
 {
     // Floor
-    floor.setSize({ 800.f, 50.f });
-    floor.setPosition({ 0.f, 550.f });
+    //floor.setSize({ 800.f, 50.f });
+    //floor.setPosition({ 0.f, 550.f });
+    //floor.setFillColor(sf::Color::Green);
+
+    sf::RectangleShape floor({ 600.f, 40.f });
+    floor.setPosition({ 100.f, 500.f });
     floor.setFillColor(sf::Color::Green);
+    platforms.push_back(floor);
+
+    sf::RectangleShape platform1({ 250.f, 25.f });
+    platform1.setPosition({ 100.f, 380.f });
+    platform1.setFillColor(sf::Color::Green);
+    platforms.push_back(platform1);
+
+    sf::RectangleShape platform2({ 250.f, 25.f });
+    platform2.setPosition({ 450.f, 260.f });
+    platform2.setFillColor(sf::Color::Green);
+    platforms.push_back(platform2);
+
+
 
     // InputSystem 1 -> PlayerController 1
     inputSystem1.setActionCallback(
@@ -99,13 +117,24 @@ void Game::update(float dt)
     // Update players
     player1.update(dt);
     player2.update(dt);
+
+    // Platform collision 
+    for (const auto& platform : platforms)
+    {
+        player1.resolvePlatformCollision(platform);
+        player2.resolvePlatformCollision(platform);
+    }
 }
 
 void Game::render()
 {
     m_Window.clear();
 
-    m_Window.draw(floor);
+    //m_Window.draw(floor);
+    for (const auto& platform : platforms)
+    {
+        m_Window.draw(platform);
+    }
 
     player1.render(m_Window);
     player2.render(m_Window);

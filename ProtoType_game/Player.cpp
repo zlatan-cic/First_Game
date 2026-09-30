@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(sf::Vector2f startPosition)
+Player::Player(sf::Vector2f startPosition, sf::Color color)
     : speed(250.f),
     gravity(900.f),
     jumpForce(-500.f),
@@ -13,7 +13,7 @@ Player::Player(sf::Vector2f startPosition)
     verticalState(VerticalPlayerState::Falling)
 {
     shape.setSize({ 50.f, 50.f });
-    shape.setFillColor(sf::Color::White);
+    shape.setFillColor(color);
 
     shape.setPosition(startPosition);
 }
@@ -221,23 +221,49 @@ void Player::update(float dt)
         });
 
     // Temporary ground collision
-    const float floorY = 550.f;
+    //const float floorY = 550.f;
 
-    if (shape.getPosition().y +
-        shape.getSize().y >= floorY)
+    //if (shape.getPosition().y +
+    //    shape.getSize().y >= floorY)
+    //{
+    //    shape.setPosition({
+    //        shape.getPosition().x,
+    //        floorY - shape.getSize().y
+    //        });
+
+    //    velocity.y = 0.f;
+
+    //    if (!isCrouching())
+    //    {
+    //        tryVerticalStateTransition(
+    //            VerticalPlayerState::Standing
+    //        );
+    //    }
+    //}
+
+}
+
+void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
+{
+    // Inportant!!!
+    const auto playerBounds = shape.getGlobalBounds();
+    const auto platformBounds = platform.getGlobalBounds();
+
+    if (playerBounds.findIntersection(platformBounds))
     {
-        shape.setPosition({
-            shape.getPosition().x,
-            floorY - shape.getSize().y
+        if (velocity.y >= 0.f)
+        {
+            shape.setPosition({
+                shape.getPosition().x,
+                platform.getPosition().y - shape.getSize().y
             });
 
-        velocity.y = 0.f;
+            velocity.y = 0.f;
 
-        if (!isCrouching())
-        {
-            tryVerticalStateTransition(
-                VerticalPlayerState::Standing
-            );
+            if (!isCrouching())
+            {
+                verticalState = VerticalPlayerState::Standing;
+            }
         }
     }
 }

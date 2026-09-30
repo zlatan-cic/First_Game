@@ -41,7 +41,7 @@ private:
     bool isCrouching() const;
 
 public:
-    Player(sf::Vector2f startPosition);
+    Player(sf::Vector2f startPosition, sf::Color color);
 
     void resetInput();
 
@@ -53,4 +53,5 @@ public:
 
     void update(float dt);
     void render(sf::RenderWindow& m_Window);
+    void resolvePlatformCollision(const sf::RectangleShape& platforms);
 };
