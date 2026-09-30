@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <iostream>
 
 Game::Game()
     : m_Window(
@@ -27,14 +28,20 @@ Game::Game()
         sf::Keyboard::Key::Right,
         sf::Keyboard::Key::Up,
         sf::Keyboard::Key::Down
-        }),
-
-    playerController2(player2)
-{
+        }),playerController2(player2)
+    {
     // Floor
     //floor.setSize({ 800.f, 50.f });
     //floor.setPosition({ 0.f, 550.f });
     //floor.setFillColor(sf::Color::Green);
+
+    player1HealthBar.setSize({ 200.f, 20.f });
+    player1HealthBar.setPosition({ 20.f, 20.f });
+    player1HealthBar.setFillColor(sf::Color::Green);
+
+    player2HealthBar.setSize({ 200.f, 20.f });
+    player2HealthBar.setPosition({ 580.f, 20.f });
+    player2HealthBar.setFillColor(sf::Color::Red);
 
     sf::RectangleShape floor({ 600.f, 40.f });
     floor.setPosition({ 100.f, 500.f });
@@ -100,7 +107,49 @@ void Game::processEvents()
             {
                 m_Window.close();
             }
+            // TEST //  //  //  //      //  //  //  //  //  /
+            // TEST //  //  //  //  //  //  //
+            if (keyPressed->code == sf::Keyboard::Key::F)
+            {
+                const auto player1Bounds = player1.getBounds();
+                const auto player2Bounds = player2.getBounds();
+
+                const float attackRange = 40.f;
+
+                const float player1Right =
+                    player1Bounds.position.x + player1Bounds.size.x;
+
+                const float distance =
+                    player2Bounds.position.x - player1Right;
+
+                if (distance >= 0.f && distance <= attackRange)
+                {
+                    player2.takeDamage(10);
+
+                    std::cout << "Player 1 hit Player 2!\n";
+                    std::cout << "Player 2 HP: "
+                        << player2.getHealth()
+                        << '\n';
+
+                    if (player2.getHealth() <= 0)
+                    {
+                        player2.loseLife();
+
+                        if (player2.getLives() > 0)
+                        {
+                            player2.resetHealth();
+                            player2.resetPosition();
+                        }
+                        else
+                        {
+                            std::cout << "Player 2 Game Over!\n";
+                            player2.setAlive(false);
+                        }
+                    }
+                }
+            }
         }
+
     }
 }
 
@@ -127,13 +176,54 @@ void Game::update(float dt)
 
     if (player1.getPosition().y > 650.f)
     {
-        player1.resetPosition();
+        player1.loseLife();
+        std::cout << "Player 1 lives: " << player1.getLives() << '\n';
+
+        if (player1.getLives() > 0)
+        {
+            player1.resetPosition();
+        }
+        else
+        {
+            std::cout << "Player 1 Game Over!\n";
+        }
     }
+    
 
     if (player2.getPosition().y > 650.f)
     {
-        player2.resetPosition();
+        player2.loseLife();
+        std::cout << "Player 2 lives: " << player2.getLives() << '\n';
+
+        if (player2.getLives() > 0)
+        {
+            player2.resetPosition();
+        }
+        else
+        {
+            std::cout << "Player 2 Game Over!\n";
+        }
     }
+
+    player1HealthBar.setSize({
+        200.f * (player1.getHealth() / 100.f),
+        20.f
+    });
+
+    player2HealthBar.setSize({
+        200.f * (player2.getHealth() / 100.f),
+        20.f
+    });
+
+    //if (player1.getLives() <= 0)
+    //{
+    //    std::cout << "Player 1 Game Over!\n";
+    //}
+
+    //if (player2.getLives() <= 0)
+    //{
+    //    std::cout << "Player 2 Game Over!\n";
+    //}
 }
 
 void Game::render()
@@ -147,7 +237,15 @@ void Game::render()
     }
 
     player1.render(m_Window);
-    player2.render(m_Window);
+    //player2.render(m_Window);
+
+    if (player2.isAlive())
+    {
+        player2.render(m_Window);
+    }
+
+    m_Window.draw(player1HealthBar);
+    m_Window.draw(player2HealthBar);
 
     m_Window.display();
 }

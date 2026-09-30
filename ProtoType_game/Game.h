@@ -29,6 +29,12 @@ private:
     //sf::RectangleShape floor;
     std::vector<sf::RectangleShape> platforms; // test
 
+    // HP Bar
+    sf::RectangleShape player1HealthBar;
+    sf::RectangleShape player2HealthBar;
+
+
+
 public:
     Game();
 

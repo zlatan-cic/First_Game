@@ -11,7 +11,11 @@ Player::Player(sf::Vector2f startPosition, sf::Color color)
     crouchingHeight(25.f),
     horizontalState(HorizontalPlayerState::Standing),
     verticalState(VerticalPlayerState::Falling),
-    spawnPosition(startPosition)
+    spawnPosition(startPosition),
+    lives(3),
+    maxHealth(100),
+    health(100),
+    alive(true)
 {
     shape.setSize({ 50.f, 50.f });
     shape.setFillColor(color);
@@ -213,35 +217,13 @@ void Player::update(float dt)
     shape.move({
         movement.x * dt,
         0.f
-        });
+    });
 
     // Vertical movement
     shape.move({
         0.f,
         velocity.y * dt
-        });
-
-    // Temporary ground collision
-    //const float floorY = 550.f;
-
-    //if (shape.getPosition().y +
-    //    shape.getSize().y >= floorY)
-    //{
-    //    shape.setPosition({
-    //        shape.getPosition().x,
-    //        floorY - shape.getSize().y
-    //        });
-
-    //    velocity.y = 0.f;
-
-    //    if (!isCrouching())
-    //    {
-    //        tryVerticalStateTransition(
-    //            VerticalPlayerState::Standing
-    //        );
-    //    }
-    //}
-
+    });
 }
 
 void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
@@ -282,6 +264,54 @@ void Player::resetPosition()
 sf::Vector2f Player::getPosition() const
 {
     return shape.getPosition();
+}
+
+void Player::loseLife()
+{
+    if (lives > 0)
+    {
+        lives--;
+    }
+}
+
+int Player::getLives() const
+{
+    return lives;
+}
+
+void Player::takeDamage(int damage)
+{
+    health -= damage;
+
+    if (health < 0)
+    {
+        health = 0;
+    }
+}
+
+int Player::getHealth() const
+{
+    return health;
+}
+
+void Player::resetHealth()
+{
+    health = maxHealth;
+}
+
+sf::FloatRect Player::getBounds() const
+{
+    return shape.getGlobalBounds();
+}
+
+void Player::setAlive(bool value)
+{
+    alive = value;
+}
+
+bool Player::isAlive() const
+{
+    return alive;
 }
 
 void Player::render(sf::RenderWindow& m_Window)

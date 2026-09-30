@@ -25,13 +25,16 @@ private:
     float gravity;
     float jumpForce;
 
-    
+    int lives;
+    int health;
+    int maxHealth;
+
+    bool alive;
 
     sf::Vector2f movement;
     sf::Vector2f velocity;
     sf::Vector2f spawnPosition;
     
-
     float standardHeight;
     float crouchingHeight;
 
@@ -55,6 +58,18 @@ public:
     void startCrouch();
     void stopCrouch();
     void resetPosition();
+    void loseLife();
+
+    int getLives() const;
+    void takeDamage(int damage);
+    int getHealth() const;
+    void resetHealth();
+
+    void setAlive(bool value);
+    bool isAlive() const;
+
+
+    sf::FloatRect getBounds() const;
 
     sf::Vector2f getPosition() const;
 
