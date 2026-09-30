@@ -124,6 +124,16 @@ void Game::update(float dt)
         player1.resolvePlatformCollision(platform);
         player2.resolvePlatformCollision(platform);
     }
+
+    if (player1.getPosition().y > 650.f)
+    {
+        player1.resetPosition();
+    }
+
+    if (player2.getPosition().y > 650.f)
+    {
+        player2.resetPosition();
+    }
 }
 
 void Game::render()

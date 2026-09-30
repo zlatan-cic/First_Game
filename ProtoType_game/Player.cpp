@@ -10,7 +10,8 @@ Player::Player(sf::Vector2f startPosition, sf::Color color)
     standardHeight(50.f),
     crouchingHeight(25.f),
     horizontalState(HorizontalPlayerState::Standing),
-    verticalState(VerticalPlayerState::Falling)
+    verticalState(VerticalPlayerState::Falling),
+    spawnPosition(startPosition)
 {
     shape.setSize({ 50.f, 50.f });
     shape.setFillColor(color);
@@ -266,6 +267,21 @@ void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
             }
         }
     }
+}
+
+void Player::resetPosition()
+{
+    shape.setPosition(spawnPosition);
+    velocity = { 0.f,0.f };
+    movement = { 0.f,0.f };
+
+    horizontalState = HorizontalPlayerState::Standing;
+    verticalState = VerticalPlayerState::Falling;
+}
+
+sf::Vector2f Player::getPosition() const
+{
+    return shape.getPosition();
 }
 
 void Player::render(sf::RenderWindow& m_Window)

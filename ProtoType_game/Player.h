@@ -25,8 +25,12 @@ private:
     float gravity;
     float jumpForce;
 
+    
+
     sf::Vector2f movement;
     sf::Vector2f velocity;
+    sf::Vector2f spawnPosition;
+    
 
     float standardHeight;
     float crouchingHeight;
@@ -50,6 +54,9 @@ public:
     void jump();
     void startCrouch();
     void stopCrouch();
+    void resetPosition();
+
+    sf::Vector2f getPosition() const;
 
     void update(float dt);
     void render(sf::RenderWindow& m_Window);
