@@ -186,6 +186,7 @@ void Game::update(float dt)
         else
         {
             std::cout << "Player 1 Game Over!\n";
+            player1.setAlive(false);
         }
     }
     
@@ -202,6 +203,7 @@ void Game::update(float dt)
         else
         {
             std::cout << "Player 2 Game Over!\n";
+            player2.setAlive(false); /////
         }
     }
 
@@ -236,8 +238,13 @@ void Game::render()
         m_Window.draw(platform);
     }
 
-    player1.render(m_Window);
+    //player1.render(m_Window);
     //player2.render(m_Window);
+
+    if (player1.isAlive())
+    {
+        player1.render(m_Window);
+    }
 
     if (player2.isAlive())
     {
