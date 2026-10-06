@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <iostream>
 
+
 Player::Player(sf::Vector2f startPosition, sf::Color color)
     : speed(250.f),
     gravity(900.f),
@@ -40,30 +41,42 @@ bool Player::tryVerticalStateTransition(VerticalPlayerState nextState)
         nextState == VerticalPlayerState::Jumping)
     {
         verticalState = nextState;
+        std::cout << "Jumping STATE";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Falling &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
+        std::cout << "Jumping Stanting";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Jumping &&
         nextState == VerticalPlayerState::Falling)
     {
         verticalState = nextState;
+        std::cout << "Jumping FAlling";
+        return true;
+    }
+    else if (verticalState == VerticalPlayerState::Standing &&
+        nextState == VerticalPlayerState::Falling)
+    {
+        verticalState = nextState;
+        std::cout << "Jumping FAlling from Standing";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Standing &&
         nextState == VerticalPlayerState::Crouching)
     {
         verticalState = nextState;
+        std::cout << "Jumping Crouching";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Crouching &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
+        std::cout << "Jumping Standing";
         return true;
     }
 

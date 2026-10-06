@@ -17,6 +17,7 @@ Game::Game()
         sf::Keyboard::Key::W,
         sf::Keyboard::Key::S
         }),
+    
 
     playerController1(player1),
 
@@ -75,6 +76,8 @@ Game::Game()
             playerController2.handleAction(action);
         }
     );
+
+    //inputSystem1.setContext(InputContext::Pause);
 }
 
 void Game::run()

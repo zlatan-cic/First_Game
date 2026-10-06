@@ -3,7 +3,8 @@
 #include <utility>
 
 InputSystem::InputSystem(const PlayerControls& controls)
-	: controls(controls)
+	: controls(controls),
+	currentContext(InputContext::Gameplay)
 {
 
 }
@@ -15,6 +16,10 @@ void InputSystem::setActionCallback(ActionCallback callback)
 
 void InputSystem::update()
 {
+	if (currentContext != InputContext::Gameplay)
+	{
+		return;
+	}
 	if (sf::Keyboard::isKeyPressed(controls.moveLeft))
 	{
 		dispatchAction(PlayerAction::MoveLeft);
@@ -46,4 +51,14 @@ void InputSystem::dispatchAction(PlayerAction action)
 	{
 		actionCallback(action);
 	}
+}
+
+void InputSystem::setContext(InputContext context)
+{
+	currentContext = context;
+}
+
+InputContext InputSystem::getContext() const
+{
+	return currentContext;
 }

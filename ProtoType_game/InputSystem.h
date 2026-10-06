@@ -3,6 +3,7 @@
 #include <functional>
 #include "PlayerControls.h"
 #include "PlayerAction.h"
+#include "InputContext.h"
 
 
 class InputSystem
@@ -14,12 +15,19 @@ public:
 
 	void setActionCallback(ActionCallback callback);
 	void update();
+	void setContext(InputContext context);
+	InputContext getContext() const;
 
 private:
 	PlayerControls controls;
 	ActionCallback actionCallback;
 
+	InputContext currentContext;
+
 	void dispatchAction(PlayerAction action);
+
+
+	
 
 
 };

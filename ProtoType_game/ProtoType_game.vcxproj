@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="InputContext.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerAction.h" />
