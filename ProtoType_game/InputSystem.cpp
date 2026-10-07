@@ -2,17 +2,15 @@
 
 #include <utility>
 
-InputSystem::InputSystem(const PlayerControls& controls)
-	: controls(controls),
-	currentContext(InputContext::Gameplay)
+InputSystem::InputSystem() : currentContext(InputContext::Gameplay)
 {
 
 }
 
-void InputSystem::setActionCallback(ActionCallback callback)
-{
-	actionCallback = std::move(callback);
-}
+//void InputSystem::setActionCallback(ActionCallback callback)
+//{
+//	actionCallback = std::move(callback);
+//}
 
 void InputSystem::update()
 {
@@ -20,36 +18,40 @@ void InputSystem::update()
 	{
 		return;
 	}
-	if (sf::Keyboard::isKeyPressed(controls.moveLeft))
+	for (const auto& binding : players)
 	{
-		dispatchAction(PlayerAction::MoveLeft);
-	}
 
-	if (sf::Keyboard::isKeyPressed(controls.moveRight))
-	{
-		dispatchAction(PlayerAction::MoveRight);
-	}
+		if (sf::Keyboard::isKeyPressed(binding.controls.moveLeft))
+		{
+			dispatchAction(binding, PlayerAction::MoveLeft);
+		}
 
-	if (sf::Keyboard::isKeyPressed(controls.jump))
-	{
-		dispatchAction(PlayerAction::Jump);
-	}
+		if (sf::Keyboard::isKeyPressed(binding.controls.moveRight))
+		{
+			dispatchAction(binding, PlayerAction::MoveRight);
+		}
 
-	if (sf::Keyboard::isKeyPressed(controls.crouch))
-	{
-		dispatchAction(PlayerAction::CrouchStart);
-	}
-	else
-	{
-		dispatchAction(PlayerAction::CrouchEnd);
+		if (sf::Keyboard::isKeyPressed(binding.controls.jump))
+		{
+			dispatchAction(binding, PlayerAction::Jump);
+		}
+
+		if (sf::Keyboard::isKeyPressed(binding.controls.crouch))
+		{
+			dispatchAction(binding, PlayerAction::CrouchStart);
+		}
+		else
+		{
+			dispatchAction(binding, PlayerAction::CrouchEnd);
+		}
 	}
 }
 
-void InputSystem::dispatchAction(PlayerAction action)
+void InputSystem::dispatchAction(PlayerBinding binding, PlayerAction action) const
 {
-	if (actionCallback)
+	if (binding.actionCallback)
 	{
-		actionCallback(action);
+		binding.actionCallback(action);
 	}
 }
 
@@ -61,4 +63,9 @@ void InputSystem::setContext(InputContext context)
 InputContext InputSystem::getContext() const
 {
 	return currentContext;
+}
+
+void InputSystem::addPlayer(const PlayerControls& controls, ActionCallback callback)
+{
+	players.push_back(PlayerBinding{ controls,callback });
 }

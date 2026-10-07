@@ -9,33 +9,13 @@ Game::Game()
 
     // PLAYER 1
     player1({ 150.f, 450.f }, sf::Color::White),
-    
-
-    inputSystem1(PlayerControls{
-        sf::Keyboard::Key::A,
-        sf::Keyboard::Key::D,
-        sf::Keyboard::Key::W,
-        sf::Keyboard::Key::S
-        }),
-    
-
     playerController1(player1),
 
     // PLAYER 2
     player2({ 600.f, 450.f }, sf::Color::Red),
+    playerController2(player2)
 
-    inputSystem2(PlayerControls{
-        sf::Keyboard::Key::Left,
-        sf::Keyboard::Key::Right,
-        sf::Keyboard::Key::Up,
-        sf::Keyboard::Key::Down
-        }),playerController2(player2)
     {
-    // Floor
-    //floor.setSize({ 800.f, 50.f });
-    //floor.setPosition({ 0.f, 550.f });
-    //floor.setFillColor(sf::Color::Green);
-
     player1HealthBar.setSize({ 200.f, 20.f });
     player1HealthBar.setPosition({ 20.f, 20.f });
     player1HealthBar.setFillColor(sf::Color::Green);
@@ -59,25 +39,35 @@ Game::Game()
     platform2.setFillColor(sf::Color::Green);
     platforms.push_back(platform2);
 
-
-
-    // InputSystem 1 -> PlayerController 1
-    inputSystem1.setActionCallback(
+    // Player 1 : WASD
+    inputSystem.addPlayer(
+        PlayerControls{
+            sf::Keyboard::Key::A,
+            sf::Keyboard::Key::D,
+            sf::Keyboard::Key::W,
+            sf::Keyboard::Key::S
+        },
         [this](PlayerAction action)
         {
             playerController1.handleAction(action);
         }
     );
 
-    // InputSystem 2 -> PlayerController 2
-    inputSystem2.setActionCallback(
+    inputSystem.addPlayer(
+        PlayerControls{
+            sf::Keyboard::Key::Left,
+            sf::Keyboard::Key::Right,
+            sf::Keyboard::Key::Up,
+            sf::Keyboard::Key::Down
+        },
         [this](PlayerAction action)
         {
             playerController2.handleAction(action);
         }
+
     );
 
-    //inputSystem1.setContext(InputContext::Pause);
+    
 }
 
 void Game::run()
@@ -163,8 +153,7 @@ void Game::update(float dt)
     player2.resetInput();
 
     // Read keyboard
-    inputSystem1.update();
-    inputSystem2.update();
+    inputSystem.update();
 
     // Update players
     player1.update(dt);
@@ -176,6 +165,7 @@ void Game::update(float dt)
         player1.resolvePlatformCollision(platform);
         player2.resolvePlatformCollision(platform);
     }
+
 
     if (player1.getPosition().y > 650.f)
     {

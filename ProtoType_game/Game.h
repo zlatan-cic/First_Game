@@ -15,15 +15,14 @@ private:
     void render();
 
     sf::RenderWindow m_Window;
+    InputSystem inputSystem;
 
     // Player 1
     Player player1;
-    InputSystem inputSystem1;
     PlayerController playerController1;
 
     // Player 2
     Player player2;
-    InputSystem inputSystem2;
     PlayerController playerController2;
 
     //sf::RectangleShape floor;

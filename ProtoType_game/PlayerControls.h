@@ -8,3 +8,5 @@ struct PlayerControls
     sf::Keyboard::Key jump;
     sf::Keyboard::Key crouch;
 };
+
+

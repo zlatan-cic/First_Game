@@ -4,6 +4,7 @@
 #include "PlayerControls.h"
 #include "PlayerAction.h"
 #include "InputContext.h"
+#include <vector>
 
 
 class InputSystem
@@ -11,24 +12,30 @@ class InputSystem
 public:
 	using ActionCallback = std::function<void(PlayerAction)>;
 
-	explicit InputSystem(const PlayerControls& controls);
+	struct PlayerBinding
+	{
+		PlayerControls controls;
+		ActionCallback actionCallback;
+	};
 
-	void setActionCallback(ActionCallback callback);
+	InputSystem();
+
+	//void setActionCallback(ActionCallback callback);
 	void update();
 	void setContext(InputContext context);
 	InputContext getContext() const;
+	void addPlayer(const PlayerControls& controls, ActionCallback callback);
 
 private:
-	PlayerControls controls;
-	ActionCallback actionCallback;
+	//PlayerControls controls;
+	//ActionCallback actionCallback;
 
 	InputContext currentContext;
 
-	void dispatchAction(PlayerAction action);
+	std::vector<PlayerBinding> players;
 
-
+	void dispatchAction(PlayerBinding binding, PlayerAction action) const;
 	
-
 
 };
 
