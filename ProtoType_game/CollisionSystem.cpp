@@ -9,10 +9,11 @@ void CollisionSystem::resolvePlatforms(Player& player, const std::vector<sf::Rec
 		
 		if (playerBounds.findIntersection(platformBounds))
 		{
-			if (player.isMovingDown())
+			if (player.isMovingDown() && player.getPreviousBottom() <= platformBounds.position.y)
 			{
 				player.landOn(platform.getPosition().y);
 			}
 		}
 	}
 }
+

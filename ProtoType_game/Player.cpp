@@ -6,6 +6,7 @@ Player::Player(sf::Vector2f startPosition, sf::Color color)
     : speed(250.f),
     gravity(900.f),
     jumpForce(-500.f),
+    previousBottom(0.0),
     movement(0.f, 0.f),
     velocity(0.f, 0.f),
     standardHeight(50.f),
@@ -215,12 +216,14 @@ void Player::resetInput()
 
 void Player::update(float dt)
 {
+    previousBottom = shape.getPosition().y + shape.getSize().y;
+
     // Gravity
     velocity.y += gravity * dt;
 
     if (velocity.y > 0.f &&
-        verticalState == VerticalPlayerState::Jumping ||
-        verticalState == VerticalPlayerState::Standing)
+        (verticalState == VerticalPlayerState::Jumping ||
+        verticalState == VerticalPlayerState::Standing))
     {
         tryVerticalStateTransition(
             VerticalPlayerState::Falling
@@ -327,4 +330,9 @@ void Player::render(sf::RenderWindow& m_Window)
 bool Player::isMovingDown() const
 {
     return velocity.y >= 0.f;;
+}
+
+float Player::getPreviousBottom() const
+{
+    return previousBottom;
 }

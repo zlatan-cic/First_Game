@@ -24,6 +24,7 @@ private:
     float speed;
     float gravity;
     float jumpForce;
+    float previousBottom;
 
     int lives;
     int health;
@@ -71,10 +72,13 @@ public:
     void landOn(float surfaceY);
     bool isMovingDown() const;
 
+
     sf::FloatRect getBounds() const;
 
     sf::Vector2f getPosition() const;
 
     void update(float dt);
     void render(sf::RenderWindow& m_Window);
+
+    float getPreviousBottom() const;
 };

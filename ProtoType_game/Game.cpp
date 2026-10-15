@@ -64,10 +64,7 @@ Game::Game()
         {
             playerController2.handleAction(action);
         }
-
     );
-
-    
 }
 
 void Game::run()
@@ -100,8 +97,7 @@ void Game::processEvents()
             {
                 m_Window.close();
             }
-            // TEST //  //  //  //      //  //  //  //  //  /
-            // TEST //  //  //  //  //  //  //
+
             if (keyPressed->code == sf::Keyboard::Key::F)
             {
                 const auto player1Bounds = player1.getBounds();
@@ -195,7 +191,7 @@ void Game::update(float dt)
         else
         {
             std::cout << "Player 2 Game Over!\n";
-            player2.setAlive(false); /////
+            player2.setAlive(false); 
         }
     }
 
@@ -208,30 +204,17 @@ void Game::update(float dt)
         200.f * (player2.getHealth() / 100.f),
         20.f
     });
-
-    //if (player1.getLives() <= 0)
-    //{
-    //    std::cout << "Player 1 Game Over!\n";
-    //}
-
-    //if (player2.getLives() <= 0)
-    //{
-    //    std::cout << "Player 2 Game Over!\n";
-    //}
 }
 
 void Game::render()
 {
     m_Window.clear();
 
-    //m_Window.draw(floor);
+
     for (const auto& platform : platforms)
     {
         m_Window.draw(platform);
     }
-
-    //player1.render(m_Window);
-    //player2.render(m_Window);
 
     if (player1.isAlive())
     {
