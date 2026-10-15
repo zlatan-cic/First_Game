@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputContext.h" />
     <ClInclude Include="InputSystem.h" />

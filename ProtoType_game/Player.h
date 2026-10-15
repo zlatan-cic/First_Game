@@ -69,7 +69,7 @@ public:
     bool isAlive() const;
 
     void landOn(float surfaceY);
-
+    bool isMovingDown() const;
 
     sf::FloatRect getBounds() const;
 
@@ -77,5 +77,4 @@ public:
 
     void update(float dt);
     void render(sf::RenderWindow& m_Window);
-    void resolvePlatformCollision(const sf::RectangleShape& platforms);
 };

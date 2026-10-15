@@ -6,6 +6,7 @@
 #include "InputSystem.h"
 #include "PlayerController.h"
 #include <vector>
+#include "CollisionSystem.h"
 
 class Game
 {
@@ -16,6 +17,8 @@ private:
 
     sf::RenderWindow m_Window;
     InputSystem inputSystem;
+
+    CollisionSystem collisionSystem;
 
     // Player 1
     Player player1;

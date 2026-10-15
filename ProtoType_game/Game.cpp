@@ -160,11 +160,10 @@ void Game::update(float dt)
     player2.update(dt);
 
     // Platform collision 
-    for (const auto& platform : platforms)
-    {
-        player1.resolvePlatformCollision(platform);
-        player2.resolvePlatformCollision(platform);
-    }
+    collisionSystem.resolvePlatforms(player1, platforms);
+    collisionSystem.resolvePlatforms(player2, platforms);
+
+
 
 
     if (player1.getPosition().y > 650.f)

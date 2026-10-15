@@ -255,20 +255,6 @@ void Player::landOn(float surfaceY)
     }
 }
 
-void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
-{
-    // Inportant!!!
-    const auto playerBounds = shape.getGlobalBounds();
-    const auto platformBounds = platform.getGlobalBounds();
-
-    if (playerBounds.findIntersection(platformBounds))
-    {
-        if (velocity.y >= 0.f)
-        {
-            landOn(platform.getPosition().y);
-        }
-    }
-}
 
 void Player::resetPosition()
 {
@@ -336,4 +322,9 @@ bool Player::isAlive() const
 void Player::render(sf::RenderWindow& m_Window)
 {
     m_Window.draw(shape);
+}
+
+bool Player::isMovingDown() const
+{
+    return velocity.y >= 0.f;;
 }
