@@ -68,6 +68,8 @@ public:
     void setAlive(bool value);
     bool isAlive() const;
 
+    void landOn(float surfaceY);
+
 
     sf::FloatRect getBounds() const;
 

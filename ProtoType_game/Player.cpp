@@ -240,6 +240,21 @@ void Player::update(float dt)
     });
 }
 
+void Player::landOn(float surfaceY)
+{
+    shape.setPosition({
+        shape.getPosition().x,
+        surfaceY - shape.getSize().y
+    });
+
+    velocity.y = 0.f;
+
+    if (!isCrouching())
+    {
+        verticalState = VerticalPlayerState::Standing;
+    }
+}
+
 void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
 {
     // Inportant!!!
@@ -250,17 +265,7 @@ void Player::resolvePlatformCollision(const sf::RectangleShape& platform)
     {
         if (velocity.y >= 0.f)
         {
-            shape.setPosition({
-                shape.getPosition().x,
-                platform.getPosition().y - shape.getSize().y
-            });
-
-            velocity.y = 0.f;
-
-            if (!isCrouching())
-            {
-                verticalState = VerticalPlayerState::Standing;
-            }
+            landOn(platform.getPosition().y);
         }
     }
 }
