@@ -1,16 +1,10 @@
 #include "InputSystem.h"
 
-#include <utility>
 
 InputSystem::InputSystem() : currentContext(InputContext::Gameplay)
 {
 
 }
-
-//void InputSystem::setActionCallback(ActionCallback callback)
-//{
-//	actionCallback = std::move(callback);
-//}
 
 void InputSystem::update()
 {
@@ -47,7 +41,7 @@ void InputSystem::update()
 	}
 }
 
-void InputSystem::dispatchAction(PlayerBinding binding, PlayerAction action) const
+void InputSystem::dispatchAction(const PlayerBinding& binding, PlayerAction action) const
 {
 	if (binding.actionCallback)
 	{

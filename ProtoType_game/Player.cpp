@@ -41,42 +41,42 @@ bool Player::tryVerticalStateTransition(VerticalPlayerState nextState)
         nextState == VerticalPlayerState::Jumping)
     {
         verticalState = nextState;
-        std::cout << "Jumping STATE";
+        //std::cout << "Jumping STATE";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Falling &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
-        std::cout << "Jumping Stanting";
+        //std::cout << "Jumping Stanting";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Jumping &&
         nextState == VerticalPlayerState::Falling)
     {
         verticalState = nextState;
-        std::cout << "Jumping FAlling";
+        //std::cout << "Jumping FAlling";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Standing &&
         nextState == VerticalPlayerState::Falling)
     {
         verticalState = nextState;
-        std::cout << "Jumping FAlling from Standing";
+        //std::cout << "Jumping FAlling from Standing";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Standing &&
         nextState == VerticalPlayerState::Crouching)
     {
         verticalState = nextState;
-        std::cout << "Jumping Crouching";
+        //std::cout << "Jumping Crouching";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Crouching &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
-        std::cout << "Jumping Standing";
+        //std::cout << "Jumping Standing";
         return true;
     }
 
@@ -123,7 +123,7 @@ void Player::moveLeft()
             HorizontalPlayerState::MovingLeft
         );
 
-        std::cout << "MoveLeft!!!\n";
+        //std::cout << "MoveLeft!!!\n";
     }
 }
 
@@ -137,7 +137,7 @@ void Player::moveRight()
             HorizontalPlayerState::MovingRight
         );
 
-        std::cout << "MoveRight!!!\n";
+        //std::cout << "MoveRight!!!\n";
     }
 }
 
@@ -149,7 +149,7 @@ void Player::jump()
     {
         velocity.y = jumpForce;
 
-        std::cout << "State Jump!!!\n";
+        //std::cout << "State Jump!!!\n";
     }
 }
 
@@ -173,7 +173,7 @@ void Player::startCrouch()
             bottom - crouchingHeight
             });
 
-        std::cout << "CrouchStart!!!\n";
+        //std::cout << "CrouchStart!!!\n";
     }
 }
 
@@ -199,7 +199,7 @@ void Player::stopCrouch()
                 bottom - standardHeight
                 });
 
-            std::cout << "CrouchEnd!!!\n";
+            //std::cout << "CrouchEnd!!!\n";
         }
     }
 }
@@ -219,7 +219,8 @@ void Player::update(float dt)
     velocity.y += gravity * dt;
 
     if (velocity.y > 0.f &&
-        verticalState == VerticalPlayerState::Jumping)
+        verticalState == VerticalPlayerState::Jumping ||
+        verticalState == VerticalPlayerState::Standing)
     {
         tryVerticalStateTransition(
             VerticalPlayerState::Falling
