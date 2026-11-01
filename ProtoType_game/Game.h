@@ -15,6 +15,10 @@ private:
     void update(float dt);
     void render();
 
+    void initUI();
+    void initPlatforms();
+    void initInput();
+
     sf::RenderWindow m_Window;
     InputSystem inputSystem;
 
@@ -28,8 +32,7 @@ private:
     Player player2;
     PlayerController playerController2;
 
-    //sf::RectangleShape floor;
-    std::vector<sf::RectangleShape> platforms; // test
+    std::vector<sf::RectangleShape> platforms;
 
     // HP Bar
     sf::RectangleShape player1HealthBar;

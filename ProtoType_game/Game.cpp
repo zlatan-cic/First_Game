@@ -15,56 +15,11 @@ Game::Game()
     player2({ 600.f, 450.f }, sf::Color::Red),
     playerController2(player2)
 
-    {
-    player1HealthBar.setSize({ 200.f, 20.f });
-    player1HealthBar.setPosition({ 20.f, 20.f });
-    player1HealthBar.setFillColor(sf::Color::Green);
-
-    player2HealthBar.setSize({ 200.f, 20.f });
-    player2HealthBar.setPosition({ 580.f, 20.f });
-    player2HealthBar.setFillColor(sf::Color::Red);
-
-    sf::RectangleShape floor({ 600.f, 40.f });
-    floor.setPosition({ 100.f, 500.f });
-    floor.setFillColor(sf::Color::Green);
-    platforms.push_back(floor);
-
-    sf::RectangleShape platform1({ 250.f, 25.f });
-    platform1.setPosition({ 100.f, 380.f });
-    platform1.setFillColor(sf::Color::Green);
-    platforms.push_back(platform1);
-
-    sf::RectangleShape platform2({ 250.f, 25.f });
-    platform2.setPosition({ 450.f, 260.f });
-    platform2.setFillColor(sf::Color::Green);
-    platforms.push_back(platform2);
-
-    // Player 1 : WASD
-    inputSystem.addPlayer(
-        PlayerControls{
-            sf::Keyboard::Key::A,
-            sf::Keyboard::Key::D,
-            sf::Keyboard::Key::W,
-            sf::Keyboard::Key::S
-        },
-        [this](PlayerAction action)
-        {
-            playerController1.handleAction(action);
-        }
-    );
-
-    inputSystem.addPlayer(
-        PlayerControls{
-            sf::Keyboard::Key::Left,
-            sf::Keyboard::Key::Right,
-            sf::Keyboard::Key::Up,
-            sf::Keyboard::Key::Down
-        },
-        [this](PlayerAction action)
-        {
-            playerController2.handleAction(action);
-        }
-    );
+{
+    initUI();
+    initPlatforms();
+    initInput();
+   
 }
 
 void Game::run()
@@ -230,4 +185,63 @@ void Game::render()
     m_Window.draw(player2HealthBar);
 
     m_Window.display();
+}
+
+void Game::initUI()
+{
+    player1HealthBar.setSize({ 200.f, 20.f });
+    player1HealthBar.setPosition({ 20.f, 20.f });
+    player1HealthBar.setFillColor(sf::Color::Green);
+
+    player2HealthBar.setSize({ 200.f, 20.f });
+    player2HealthBar.setPosition({ 580.f, 20.f });
+    player2HealthBar.setFillColor(sf::Color::Red);
+}
+
+void Game::initPlatforms()
+{
+    sf::RectangleShape floor({ 600.f, 40.f });
+    floor.setPosition({ 100.f, 500.f });
+    floor.setFillColor(sf::Color::Green);
+    platforms.push_back(floor);
+
+    sf::RectangleShape platform1({ 250.f, 25.f });
+    platform1.setPosition({ 100.f, 380.f });
+    platform1.setFillColor(sf::Color::Green);
+    platforms.push_back(platform1);
+
+    sf::RectangleShape platform2({ 250.f, 25.f });
+    platform2.setPosition({ 450.f, 260.f });
+    platform2.setFillColor(sf::Color::Green);
+    platforms.push_back(platform2);
+}
+
+void Game::initInput()
+{
+    // Player 1 : WASD
+    inputSystem.addPlayer(
+        PlayerControls{
+            sf::Keyboard::Key::A,
+            sf::Keyboard::Key::D,
+            sf::Keyboard::Key::W,
+            sf::Keyboard::Key::S
+        },
+        [this](PlayerAction action)
+        {
+            playerController1.handleAction(action);
+        }
+    );
+
+    inputSystem.addPlayer(
+        PlayerControls{
+            sf::Keyboard::Key::Left,
+            sf::Keyboard::Key::Right,
+            sf::Keyboard::Key::Up,
+            sf::Keyboard::Key::Down
+        },
+        [this](PlayerAction action)
+        {
+            playerController2.handleAction(action);
+        }
+    );
 }
