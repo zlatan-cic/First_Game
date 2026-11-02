@@ -24,7 +24,6 @@ private:
     float speed;
     float gravity;
     float jumpForce;
-    float previousBottom;
 
     int lives;
     int health;

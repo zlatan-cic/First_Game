@@ -1,15 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "CollisionSide.h"
 
-enum CollisionSide
-{
-	None,
-	Top,
-	Bottom,
-	Left,
-	Right
-};
 
 struct CollisionInfo
 {
