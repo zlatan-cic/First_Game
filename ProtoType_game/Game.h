@@ -19,6 +19,8 @@ private:
     void initPlatforms();
     void initInput();
 
+    void handlePlatformsCollisions(Player& player);
+
     sf::RenderWindow m_Window;
     InputSystem inputSystem;
 

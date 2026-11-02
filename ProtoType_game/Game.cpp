@@ -111,8 +111,10 @@ void Game::update(float dt)
     player2.update(dt);
 
     // Platform collision 
-    collisionSystem.resolvePlatforms(player1, platforms);
-    collisionSystem.resolvePlatforms(player2, platforms);
+    //collisionSystem.resolvePlatforms(player1, platforms);
+    //collisionSystem.resolvePlatforms(player2, platforms);
+    handlePlatformsCollisions(player1);
+    handlePlatformsCollisions(player2);
 
 
 
@@ -244,4 +246,17 @@ void Game::initInput()
             playerController2.handleAction(action);
         }
     );
+}
+
+void Game::handlePlatformsCollisions(Player& player)
+{
+    for (const auto& platform : platforms)
+    {
+        const CollisionInfo info = collisionSystem.check(player.getBounds(), platform.getGlobalBounds());
+
+        if (info.side == CollisionSide::Top && player.isMovingDown())
+        {
+            player.landOn(platform.getPosition().y);
+        }
+    }
 }
