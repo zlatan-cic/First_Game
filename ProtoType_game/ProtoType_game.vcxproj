@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CollisionSystem.cpp" />
+    <ClCompile Include="ConfigLoader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
@@ -143,13 +144,19 @@
   <ItemGroup>
     <ClInclude Include="CollisionSide.h" />
     <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="ConfigLoader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputContext.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerAction.h" />
+    <ClInclude Include="PlayerConfig.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayerControls.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="players.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

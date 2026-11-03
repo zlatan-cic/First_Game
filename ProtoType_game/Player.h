@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <string>
+#include "PlayerConfig.h"
 
 enum class HorizontalPlayerState
 {
@@ -19,6 +21,7 @@ enum class VerticalPlayerState
 class Player
 {
 private:
+    std::string name;
     sf::RectangleShape shape;
 
     float speed;
@@ -48,7 +51,9 @@ private:
     bool isCrouching() const;
 
 public:
-    Player(sf::Vector2f startPosition, sf::Color color);
+    explicit Player(const PlayerConfig& config);
+
+    const std::string& getName() const;
 
     void resetInput();
 

@@ -1,0 +1,22 @@
+{
+  "players": [
+    {
+      "name": "Player 1",
+      "startPosition": { "x": 150, "y": 450 },
+      "color": [67, 155, 255 ],
+      "speed": 250,
+      "jumpForce": -500,
+      "lives": 3,
+      "maxHealth": 100
+    },
+    {
+      "name": "Player 2",
+      "startPosition": { "x": 600, "y": 450 },
+      "color": [204, 0, 0],
+      "speed": 250,
+      "jumpForce": -500,
+      "lives": 3,
+      "maxHealth": 100
+    }
+  ]
+}

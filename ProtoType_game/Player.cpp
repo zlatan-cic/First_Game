@@ -2,26 +2,33 @@
 #include <iostream>
 
 
-Player::Player(sf::Vector2f startPosition, sf::Color color)
-    : speed(250.f),
+// Clanovi su navedeni istim redom kao u Player.h
+Player::Player(const PlayerConfig& config)
+    : name(config.name),
+    speed(config.speed),
     gravity(900.f),
-    jumpForce(-500.f),
+    jumpForce(config.jumpForce),
+    lives(config.lives),
+    health(config.maxHealth),
+    maxHealth(config.maxHealth),
+    alive(true),
     movement(0.f, 0.f),
     velocity(0.f, 0.f),
+    spawnPosition(config.startPosition),
     standardHeight(50.f),
     crouchingHeight(25.f),
     horizontalState(HorizontalPlayerState::Standing),
-    verticalState(VerticalPlayerState::Falling),
-    spawnPosition(startPosition),
-    lives(3),
-    maxHealth(100),
-    health(100),
-    alive(true)
+    verticalState(VerticalPlayerState::Falling)
 {
-    shape.setSize({ 50.f, 50.f });
-    shape.setFillColor(color);
+    shape.setSize({ 50.f, standardHeight });
+    shape.setFillColor(config.color);
 
-    shape.setPosition(startPosition);
+    shape.setPosition(config.startPosition);
+}
+
+const std::string& Player::getName() const
+{
+    return name;
 }
 
 bool Player::isGrounded() const

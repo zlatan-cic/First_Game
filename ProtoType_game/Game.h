@@ -28,6 +28,9 @@ private:
 
     CollisionSystem collisionSystem;
 
+
+    std::vector<PlayerConfig> playerConfigs;
+
     // Player 1
     Player player1;
     PlayerController playerController1;

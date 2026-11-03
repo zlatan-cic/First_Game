@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "ConfigLoader.h"
 #include <iostream>
 
 Game::Game()
@@ -7,19 +8,22 @@ Game::Game()
         "SFML test game loop"
     ),
 
+    // Prvo procitaj igrace iz JSON-a (uvek vraca tacno 2)
+    playerConfigs(loadPlayerConfigs("players.json", 2)),
+
     // PLAYER 1
-    player1({ 150.f, 450.f }, sf::Color::White),
+    player1(playerConfigs[0]),
     playerController1(player1),
 
     // PLAYER 2
-    player2({ 600.f, 450.f }, sf::Color::Red),
+    player2(playerConfigs[1]),
     playerController2(player2)
 
 {
     initUI();
     initPlatforms();
     initInput();
-   
+
 }
 
 void Game::run()
@@ -121,12 +125,12 @@ void Game::update(float dt)
     player1HealthBar.setSize({
         200.f * (player1.getHealth() / 100.f),
         20.f
-    });
+        });
 
     player2HealthBar.setSize({
         200.f * (player2.getHealth() / 100.f),
         20.f
-    });
+        });
 }
 
 void Game::render()
@@ -230,7 +234,7 @@ void Game::handlePlatformsCollisions(Player& player)
 void Game::handleFallOut(Player& player)
 {
     player.loseLife();
-    std::cout << "Player lives: " << player.getLives() << '\n';
+    std::cout << player.getName() << " lives: " << player.getLives() << '\n';
 
     if (player.getLives() > 0)
     {
@@ -238,7 +242,7 @@ void Game::handleFallOut(Player& player)
     }
     else
     {
-        std::cout << "Player Game Over!\n";
+        std::cout << player.getName() << " Game Over!\n";
         player.setAlive(false);
     }
 }
