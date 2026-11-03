@@ -69,6 +69,8 @@ public:
     bool isAlive() const;
 
     void landOn(float surfaceY);
+    void setPositionX(float x);
+
     bool isMovingDown() const;
 
 
@@ -79,5 +81,4 @@ public:
     void update(float dt);
     void render(sf::RenderWindow& m_Window);
 
-    float getPreviousBottom() const;
 };

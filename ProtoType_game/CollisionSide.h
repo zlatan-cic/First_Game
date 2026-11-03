@@ -1,5 +1,5 @@
 #pragma once
-enum CollisionSide
+enum class CollisionSide
 {
 	None,
 	Top,

@@ -20,6 +20,8 @@ private:
     void initInput();
 
     void handlePlatformsCollisions(Player& player);
+    void handleFallOut(Player& player);
+    void handleScreenEdges(Player& player);
 
     sf::RenderWindow m_Window;
     InputSystem inputSystem;

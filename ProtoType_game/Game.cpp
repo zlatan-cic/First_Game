@@ -111,46 +111,12 @@ void Game::update(float dt)
     player2.update(dt);
 
     // Platform collision 
-    //collisionSystem.resolvePlatforms(player1, platforms);
-    //collisionSystem.resolvePlatforms(player2, platforms);
     handlePlatformsCollisions(player1);
     handlePlatformsCollisions(player2);
 
-
-
-
-    if (player1.getPosition().y > 650.f)
-    {
-        player1.loseLife();
-        std::cout << "Player 1 lives: " << player1.getLives() << '\n';
-
-        if (player1.getLives() > 0)
-        {
-            player1.resetPosition();
-        }
-        else
-        {
-            std::cout << "Player 1 Game Over!\n";
-            player1.setAlive(false);
-        }
-    }
-    
-
-    if (player2.getPosition().y > 650.f)
-    {
-        player2.loseLife();
-        std::cout << "Player 2 lives: " << player2.getLives() << '\n';
-
-        if (player2.getLives() > 0)
-        {
-            player2.resetPosition();
-        }
-        else
-        {
-            std::cout << "Player 2 Game Over!\n";
-            player2.setAlive(false); 
-        }
-    }
+    // Screen Edges
+    handleScreenEdges(player1);
+    handleScreenEdges(player2);
 
     player1HealthBar.setSize({
         200.f * (player1.getHealth() / 100.f),
@@ -258,5 +224,42 @@ void Game::handlePlatformsCollisions(Player& player)
         {
             player.landOn(platform.getPosition().y);
         }
+    }
+}
+
+void Game::handleFallOut(Player& player)
+{
+    player.loseLife();
+    std::cout << "Player lives: " << player.getLives() << '\n';
+
+    if (player.getLives() > 0)
+    {
+        player.resetPosition();
+    }
+    else
+    {
+        std::cout << "Player Game Over!\n";
+        player.setAlive(false);
+    }
+}
+
+void Game::handleScreenEdges(Player& player)
+{
+    const sf::FloatRect screen({ 0.f, 0.f }, sf::Vector2f(m_Window.getSize()));
+    const ScreenEdgeInfo edges = collisionSystem.checkScreenEdges(player.getBounds(), screen);
+
+    if (edges.outLeft)
+    {
+        player.setPositionX(screen.position.x);
+    }
+
+    if (edges.outRight)
+    {
+        player.setPositionX(screen.size.x - player.getBounds().size.x);
+    }
+
+    if (edges.outBottom)
+    {
+        handleFallOut(player);
     }
 }

@@ -141,6 +141,7 @@
     <ClCompile Include="PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionSide.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="InputContext.h" />

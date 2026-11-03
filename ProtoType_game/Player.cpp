@@ -256,6 +256,11 @@ void Player::landOn(float surfaceY)
     }
 }
 
+void Player::setPositionX(float x)
+{
+    shape.setPosition({ x, shape.getPosition().y });
+}
+
 
 void Player::resetPosition()
 {

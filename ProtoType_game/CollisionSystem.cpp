@@ -45,3 +45,22 @@ CollisionInfo  CollisionSystem::check(const sf::FloatRect& a, const sf::FloatRec
 
 	return info;
 }
+
+ScreenEdgeInfo CollisionSystem::checkScreenEdges(const sf::FloatRect& shape, const sf::FloatRect& screen) const
+{
+	ScreenEdgeInfo info;
+
+	const float shapeLeft = shape.position.x;
+	const float shapeRight = shape.position.x + shape.size.x;
+	const float shapeTop = shape.position.y;
+
+	const float screenLeft = screen.position.x;
+	const float screenRight = screen.position.x + screen.size.x;
+	const float screenBottom = screen.position.y + screen.size.y;
+
+	info.outLeft = shapeLeft < screenLeft;
+	info.outRight = shapeRight > screenRight;
+	info.outBottom = shapeTop > screenBottom;
+
+	return info;
+}
