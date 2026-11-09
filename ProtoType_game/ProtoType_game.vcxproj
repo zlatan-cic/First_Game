@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core;$(ProjectDir)Player;$(ProjectDir)Systems;$(ProjectDir)Config;$(ProjectDir)ThirdParty;C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core;$(ProjectDir)Player;$(ProjectDir)Systems;$(ProjectDir)Config;$(ProjectDir)ThirdParty;C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core;$(ProjectDir)Player;$(ProjectDir)Systems;$(ProjectDir)Config;$(ProjectDir)ThirdParty;C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,7 +124,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core;$(ProjectDir)Player;$(ProjectDir)Systems;$(ProjectDir)Config;$(ProjectDir)ThirdParty;C:\Dev\source_dev_new\SFML-3.0.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,27 +135,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CollisionSystem.cpp" />
-    <ClCompile Include="ConfigLoader.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="Systems\CollisionSystem.cpp" />
+    <ClCompile Include="Config\ConfigLoader.cpp" />
+    <ClCompile Include="Core\Game.cpp" />
+    <ClCompile Include="Systems\InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CollisionSide.h" />
-    <ClInclude Include="CollisionSystem.h" />
-    <ClInclude Include="ConfigLoader.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="InputContext.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="json.hpp" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerAction.h" />
-    <ClInclude Include="PlayerConfig.h" />
-    <ClInclude Include="PlayerController.h" />
-    <ClInclude Include="PlayerControls.h" />
+    <ClInclude Include="Systems\CollisionSide.h" />
+    <ClInclude Include="Systems\CollisionSystem.h" />
+    <ClInclude Include="Config\ConfigLoader.h" />
+    <ClInclude Include="Core\Game.h" />
+    <ClInclude Include="Systems\InputContext.h" />
+    <ClInclude Include="Systems\InputSystem.h" />
+    <ClInclude Include="ThirdParty\json.hpp" />
+    <ClInclude Include="Player\Player.h" />
+    <ClInclude Include="Player\PlayerAction.h" />
+    <ClInclude Include="Player\PlayerConfig.h" />
+    <ClInclude Include="Player\PlayerController.h" />
+    <ClInclude Include="Player\PlayerControls.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="players.json" />
