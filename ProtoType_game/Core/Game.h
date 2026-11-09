@@ -7,6 +7,7 @@
 #include "PlayerController.h"
 #include <vector>
 #include "CollisionSystem.h"
+#include "GameState.h"
 
 class Game
 {
@@ -31,6 +32,8 @@ private:
 
     std::vector<PlayerConfig> playerConfigs;
 
+   
+
     // Player 1
     Player player1;
     PlayerController playerController1;
@@ -45,10 +48,15 @@ private:
     sf::RectangleShape player1HealthBar;
     sf::RectangleShape player2HealthBar;
 
+    GameState currentState;
+    
+
 
 
 public:
     Game();
+
+
 
     void run();
 };

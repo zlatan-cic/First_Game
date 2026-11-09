@@ -144,6 +144,7 @@
     <ClCompile Include="Player\PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config\GameState.h" />
     <ClInclude Include="Systems\CollisionSide.h" />
     <ClInclude Include="Systems\CollisionSystem.h" />
     <ClInclude Include="Config\ConfigLoader.h" />

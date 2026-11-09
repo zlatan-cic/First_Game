@@ -17,12 +17,17 @@ Game::Game()
 
     // PLAYER 2
     player2(playerConfigs[1]),
-    playerController2(player2)
+    playerController2(player2),
+
+    // GameState
+    currentState(GameState::Playing)
 
 {
     initUI();
     initPlatforms();
     initInput();
+
+    
 
 }
 
@@ -54,47 +59,61 @@ void Game::processEvents()
         {
             if (keyPressed->code == sf::Keyboard::Key::Escape)
             {
-                m_Window.close();
+                if (currentState == GameState::Playing)
+                {
+                    currentState = GameState::Paused;
+                    inputSystem.setContext(InputContext::Pause);
+                }
+                else if (currentState == GameState::Paused)
+                {
+                    currentState = GameState::Playing;
+                    inputSystem.setContext(InputContext::Gameplay);
+                }
             }
 
             if (keyPressed->code == sf::Keyboard::Key::F)
             {
-                const auto player1Bounds = player1.getBounds();
-                const auto player2Bounds = player2.getBounds();
-
-                const float attackRange = 40.f;
-
-                const float player1Right =
-                    player1Bounds.position.x + player1Bounds.size.x;
-
-                const float distance =
-                    player2Bounds.position.x - player1Right;
-
-                if (distance >= 0.f && distance <= attackRange)
+                if (currentState == GameState::Playing)
                 {
-                    player2.takeDamage(10);
+                    const auto player1Bounds = player1.getBounds();
+                    const auto player2Bounds = player2.getBounds();
 
-                    std::cout << "Player 1 hit Player 2!\n";
-                    std::cout << "Player 2 HP: "
-                        << player2.getHealth()
-                        << '\n';
+                    const float attackRange = 40.f;
 
-                    if (player2.getHealth() <= 0)
+                    const float player1Right =
+                        player1Bounds.position.x + player1Bounds.size.x;
+
+                    const float distance =
+                        player2Bounds.position.x - player1Right;
+                    std::cout << "ATTACK!!!!!\n";
+
+                    if (distance >= 0.f && distance <= attackRange)
                     {
-                        player2.loseLife();
+                        player2.takeDamage(10);
 
-                        if (player2.getLives() > 0)
+                        std::cout << "Player 1 hit Player 2!\n";
+                        std::cout << "Player 2 HP: "
+                            << player2.getHealth()
+                            << '\n';
+
+                        if (player2.getHealth() <= 0)
                         {
-                            player2.resetHealth();
-                            player2.resetPosition();
-                        }
-                        else
-                        {
-                            std::cout << "Player 2 Game Over!\n";
-                            player2.setAlive(false);
+                            player2.loseLife();
+
+                            if (player2.getLives() > 0)
+                            {
+                                player2.resetHealth();
+                                player2.resetPosition();
+                            }
+                            else
+                            {
+                                std::cout << "Player 2 Game Over!\n";
+                                player2.setAlive(false);
+                            }
                         }
                     }
                 }
+               
             }
         }
 
@@ -103,6 +122,11 @@ void Game::processEvents()
 
 void Game::update(float dt)
 {
+    if (currentState != GameState::Playing)
+    {
+        return;
+    }
+
     // Reset input from previous frame
     player1.resetInput();
     player2.resetInput();
