@@ -20,15 +20,14 @@ Game::Game()
     playerController2(player2),
 
     // GameState
-    currentState(GameState::Playing)
+    currentState(GameState::Menu)
 
 {
     initUI();
     initPlatforms();
     initInput();
-
-    
-
+    initMenu();
+   
 }
 
 void Game::run()
@@ -57,66 +56,22 @@ void Game::processEvents()
         if (const auto* keyPressed =
             event->getIf<sf::Event::KeyPressed>())
         {
-            if (keyPressed->code == sf::Keyboard::Key::Escape)
+            switch (currentState)
             {
-                if (currentState == GameState::Playing)
-                {
-                    currentState = GameState::Paused;
-                    inputSystem.setContext(InputContext::Pause);
-                }
-                else if (currentState == GameState::Paused)
-                {
-                    currentState = GameState::Playing;
-                    inputSystem.setContext(InputContext::Gameplay);
-                }
-            }
+            case GameState::Menu:
+                handleMenuKey(keyPressed->code);
+                break;
 
-            if (keyPressed->code == sf::Keyboard::Key::F)
-            {
-                if (currentState == GameState::Playing)
-                {
-                    const auto player1Bounds = player1.getBounds();
-                    const auto player2Bounds = player2.getBounds();
+            case GameState::Playing:
+            case GameState::Paused:
+                handleGameKey(keyPressed->code);
+                break;
 
-                    const float attackRange = 40.f;
-
-                    const float player1Right =
-                        player1Bounds.position.x + player1Bounds.size.x;
-
-                    const float distance =
-                        player2Bounds.position.x - player1Right;
-                    std::cout << "ATTACK!!!!!\n";
-
-                    if (distance >= 0.f && distance <= attackRange)
-                    {
-                        player2.takeDamage(10);
-
-                        std::cout << "Player 1 hit Player 2!\n";
-                        std::cout << "Player 2 HP: "
-                            << player2.getHealth()
-                            << '\n';
-
-                        if (player2.getHealth() <= 0)
-                        {
-                            player2.loseLife();
-
-                            if (player2.getLives() > 0)
-                            {
-                                player2.resetHealth();
-                                player2.resetPosition();
-                            }
-                            else
-                            {
-                                std::cout << "Player 2 Game Over!\n";
-                                player2.setAlive(false);
-                            }
-                        }
-                    }
-                }
-               
+            case GameState::GameOver:
+                handleGameOverKey(keyPressed->code);
+                break;
             }
         }
-
     }
 }
 
@@ -163,6 +118,12 @@ void Game::render()
 {
     m_Window.clear();
 
+    if (currentState == GameState::Menu)
+    {
+        drawMenu();
+        m_Window.display();
+        return;
+    }
 
     for (const auto& platform : platforms)
     {
@@ -184,11 +145,13 @@ void Game::render()
 
     if (currentState == GameState::Paused)
     {
-        drawCenteredText("PAUSED", 300.f, 48);
+        drawCenteredText("PAUSED", 280.f, 48);
+        drawCenteredText("Esc - continue    Q - menu", 340.f, 18, sf::Color(180, 178, 169));
     }
     else if (currentState == GameState::GameOver)
     {
         drawCenteredText(winnerName + " wins!", 280.f, 40);
+        drawCenteredText("Press Enter for menu", 340.f, 18, sf::Color(180, 178, 169));
     }
 
 
@@ -339,9 +302,34 @@ void Game::checkGameOver()
     std::cout << "Winner: " << winnerName << '\n';
 }
 
-void Game::drawCenteredText(const std::string& message, float y, unsigned int size) 
+//void Game::drawCenteredText(const std::string& message, float y, unsigned int size) 
+//{
+//    sf::Text text(font, message, size);
+//
+//    const auto bounds = text.getLocalBounds();
+//    text.setOrigin(bounds.position + bounds.size / 2.f);
+//
+//    text.setPosition({ m_Window.getSize().x / 2.f, y });
+//
+//    m_Window.draw(text);
+//}
+
+void Game::initMenu()
+{
+    menuOptions = {
+        { "Player vs Player", true },
+        { "Player vs AI", false },
+        { "Online", false },
+        { "Exit", true }
+    };
+
+    selectedIndex = 0;
+}
+
+void Game::drawCenteredText(const std::string& message, float y, unsigned int size, sf::Color color)
 {
     sf::Text text(font, message, size);
+    text.setFillColor(color);
 
     const auto bounds = text.getLocalBounds();
     text.setOrigin(bounds.position + bounds.size / 2.f);
@@ -349,4 +337,171 @@ void Game::drawCenteredText(const std::string& message, float y, unsigned int si
     text.setPosition({ m_Window.getSize().x / 2.f, y });
 
     m_Window.draw(text);
+}
+
+void Game::drawMenu()
+{
+    const sf::Color normal(241, 239, 232);
+    const sf::Color selected(250, 199, 117);
+    const sf::Color disabled(136, 135, 128);
+    const sf::Color hint(180, 178, 169);
+
+    drawCenteredText("First Game", 120.f, 56, normal);
+    drawCenteredText("Welcome! Choose game mode", 185.f, 20, hint);
+
+    const float startY = 260.f;
+    const float spacing = 50.f;
+
+    for (int i = 0; i < static_cast<int>(menuOptions.size()); ++i)
+    {
+        const MenuOption& option = menuOptions[i];
+
+        std::string label = option.label;
+        if (!option.enabled)
+        {
+            label += " (soon...)";
+        }
+
+        sf::Color color = option.enabled ? normal : disabled;
+
+        if (i == selectedIndex)
+        {
+            label = "> " + label + " <";
+            color = selected;
+        }
+
+        drawCenteredText(label, startY + i * spacing, 26, color);
+    }
+
+    if (!menuMessage.empty())
+    {
+        drawCenteredText(menuMessage, 480.f, 20, selected);
+    }
+
+    drawCenteredText("Up/Down - choose    Enter - confirm", 550.f, 16, hint);
+}
+
+void Game::handleMenuKey(sf::Keyboard::Key key)
+{
+    const int optionCount = static_cast<int>(menuOptions.size());
+
+    if (key == sf::Keyboard::Key::Up || key == sf::Keyboard::Key::W)
+    {
+        selectedIndex = (selectedIndex - 1 + optionCount) % optionCount;
+        menuMessage.clear();
+    }
+    else if (key == sf::Keyboard::Key::Down || key == sf::Keyboard::Key::S)
+    {
+        selectedIndex = (selectedIndex + 1) % optionCount;
+        menuMessage.clear();
+    }
+    else if (key == sf::Keyboard::Key::Enter)
+    {
+        const MenuOption& option = menuOptions[selectedIndex];
+
+        if (!option.enabled)
+        {
+            menuMessage = "Coming soon!";
+        }
+        else if (option.label == "Player vs Player")
+        {
+            startNewGame();
+        }
+        else if (option.label == "Exit")
+        {
+            m_Window.close();
+        }
+    }
+    else if (key == sf::Keyboard::Key::Escape)
+    {
+        m_Window.close();
+    }
+}
+
+void Game::handleGameKey(sf::Keyboard::Key key)
+{
+    if (key == sf::Keyboard::Key::Escape)
+    {
+        if (currentState == GameState::Playing)
+        {
+            currentState = GameState::Paused;
+            inputSystem.setContext(InputContext::Pause);
+        }
+        else if (currentState == GameState::Paused)
+        {
+            currentState = GameState::Playing;
+            inputSystem.setContext(InputContext::Gameplay);
+        }
+    }
+    else if (key == sf::Keyboard::Key::Q && currentState == GameState::Paused)
+    {
+        currentState = GameState::Menu;
+    }
+    else if (key == sf::Keyboard::Key::F && currentState == GameState::Playing)
+    {
+        handleAttack();
+    }
+}
+
+
+void Game::handleGameOverKey(sf::Keyboard::Key key)
+{
+    if (key == sf::Keyboard::Key::Enter)
+    {
+        currentState = GameState::Menu;
+    }
+}
+
+void Game::handleAttack()
+{
+    const auto player1Bounds = player1.getBounds();
+    const auto player2Bounds = player2.getBounds();
+    
+    const float attackRange = 40.f;
+    
+    const float player1Right =
+        player1Bounds.position.x + player1Bounds.size.x;
+    
+    const float distance =
+        player2Bounds.position.x - player1Right;
+    std::cout << "ATTACK!!!!!\n";
+    
+    if (distance >= 0.f && distance <= attackRange)
+    {
+        player2.takeDamage(10);
+
+        std::cout << "Player 1 hit Player 2!\n";
+        std::cout << "Player 2 HP: "
+            << player2.getHealth()
+            << '\n';
+
+        if (player2.getHealth() <= 0)
+        {
+            player2.loseLife();
+
+            if (player2.getLives() > 0)
+            {
+                player2.resetHealth();
+                player2.resetPosition();
+            }
+            else
+            {
+                std::cout << "Player 2 Game Over!\n";
+                player2.setAlive(false);
+            }
+        }
+
+    }
+}
+
+void Game::startNewGame()
+{
+    player1 = Player(playerConfigs[0]);
+    player2 = Player(playerConfigs[1]);
+
+    winnerName.clear();
+    menuMessage.clear();
+
+    inputSystem.setContext(InputContext::Gameplay);
+    currentState = GameState::Playing;
 }

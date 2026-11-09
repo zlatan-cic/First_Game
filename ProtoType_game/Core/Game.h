@@ -10,6 +10,8 @@
 #include "GameState.h"
 #include <string>
 
+
+
 class Game
 {
 private:
@@ -27,7 +29,16 @@ private:
 
     void checkGameOver();
 
-    void drawCenteredText(const std::string& message, float y, unsigned int size);
+    void initMenu();
+    void drawCenteredText(const std::string& message, float y, unsigned int size, sf::Color color = sf::Color::White);
+    void drawMenu();
+
+    void handleMenuKey(sf::Keyboard::Key key);
+    void handleGameKey(sf::Keyboard::Key key);
+    void handleGameOverKey(sf::Keyboard::Key key);
+
+    void handleAttack();
+    void startNewGame();
 
     sf::RenderWindow m_Window;
     InputSystem inputSystem;
@@ -35,9 +46,6 @@ private:
     CollisionSystem collisionSystem;
 
     std::vector<PlayerConfig> playerConfigs;
-
-
-   
 
     // Player 1
     Player player1;
@@ -59,7 +67,15 @@ private:
 
     sf::Font font;
     
+    struct MenuOption
+    {
+        std::string label;
+        bool enabled = true;
+    };
 
+    std::vector<MenuOption> menuOptions;
+    int selectedIndex = 0;
+    std::string menuMessage;
 
 
 public:
