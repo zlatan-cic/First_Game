@@ -8,6 +8,7 @@
 #include <vector>
 #include "CollisionSystem.h"
 #include "GameState.h"
+#include <string>
 
 class Game
 {
@@ -24,13 +25,17 @@ private:
     void handleFallOut(Player& player);
     void handleScreenEdges(Player& player);
 
+    void checkGameOver();
+
+    void drawCenteredText(const std::string& message, float y, unsigned int size);
+
     sf::RenderWindow m_Window;
     InputSystem inputSystem;
 
     CollisionSystem collisionSystem;
 
-
     std::vector<PlayerConfig> playerConfigs;
+
 
    
 
@@ -49,6 +54,10 @@ private:
     sf::RectangleShape player2HealthBar;
 
     GameState currentState;
+
+    std::string winnerName;
+
+    sf::Font font;
     
 
 

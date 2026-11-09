@@ -155,6 +155,8 @@ void Game::update(float dt)
         200.f * (player2.getHealth() / 100.f),
         20.f
         });
+
+    checkGameOver();
 }
 
 void Game::render()
@@ -180,6 +182,16 @@ void Game::render()
     m_Window.draw(player1HealthBar);
     m_Window.draw(player2HealthBar);
 
+    if (currentState == GameState::Paused)
+    {
+        drawCenteredText("PAUSED", 300.f, 48);
+    }
+    else if (currentState == GameState::GameOver)
+    {
+        drawCenteredText(winnerName + " wins!", 280.f, 40);
+    }
+
+
     m_Window.display();
 }
 
@@ -192,6 +204,12 @@ void Game::initUI()
     player2HealthBar.setSize({ 200.f, 20.f });
     player2HealthBar.setPosition({ 580.f, 20.f });
     player2HealthBar.setFillColor(sf::Color::Red);
+
+    
+    if (!font.openFromFile("Assets/Fonts/Tiny5Duo-Medium.ttf"))
+    {
+        std::cout << "Problem with Font\n";
+    }
 }
 
 void Game::initPlatforms()
@@ -290,4 +308,45 @@ void Game::handleScreenEdges(Player& player)
     {
         handleFallOut(player);
     }
+}
+
+void Game::checkGameOver()
+{
+    if (player1.isAlive() && player2.isAlive())
+    {
+        return;
+    }
+    currentState = GameState::GameOver;
+
+    inputSystem.setContext(InputContext::Pause);
+
+    if (player1.isAlive())
+    {
+        winnerName = player1.getName();
+        std::cout << player2.getName() << " defeated!\n";
+    }
+    else if (player2.isAlive())
+    {
+        winnerName = player2.getName();
+        std::cout << player1.getName() << " defeated!\n";
+    }
+    else
+    {
+        winnerName = "Nobody";
+        std::cout << "Both players defeated!\n";
+    }
+
+    std::cout << "Winner: " << winnerName << '\n';
+}
+
+void Game::drawCenteredText(const std::string& message, float y, unsigned int size) 
+{
+    sf::Text text(font, message, size);
+
+    const auto bounds = text.getLocalBounds();
+    text.setOrigin(bounds.position + bounds.size / 2.f);
+
+    text.setPosition({ m_Window.getSize().x / 2.f, y });
+
+    m_Window.draw(text);
 }
