@@ -7,4 +7,5 @@ enum class PlayerAction
 	Jump,
 	CrouchStart,
 	CrouchEnd,
+	Attack,
 };

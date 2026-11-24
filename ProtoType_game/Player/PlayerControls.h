@@ -7,6 +7,5 @@ struct PlayerControls
     sf::Keyboard::Key moveRight;
     sf::Keyboard::Key jump;
     sf::Keyboard::Key crouch;
-};
-
-
+    sf::Keyboard::Key attack = sf::Keyboard::Key::Unknown; // Unknown = no attack key
+}; 

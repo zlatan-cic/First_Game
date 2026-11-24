@@ -2,8 +2,7 @@
 
 
 PlayerController::PlayerController(Player& player) : player(player)
-{
-}
+{}
 
 void PlayerController::handleAction(PlayerAction action)
 {
@@ -27,6 +26,10 @@ void PlayerController::handleAction(PlayerAction action)
 
     case PlayerAction::CrouchEnd:
         player.stopCrouch();
+        break;
+
+    case PlayerAction::Attack:
+        player.attack();
         break;
     }
 }

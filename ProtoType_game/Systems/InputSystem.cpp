@@ -38,6 +38,12 @@ void InputSystem::update()
 		{
 			dispatchAction(binding, PlayerAction::CrouchEnd);
 		}
+
+		if (binding.controls.attack != sf::Keyboard::Key::Unknown &&
+			sf::Keyboard::isKeyPressed(binding.controls.attack))
+		{
+			dispatchAction(binding, PlayerAction::Attack);
+		}
 	}
 }
 

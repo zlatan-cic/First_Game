@@ -10,6 +10,12 @@ enum class HorizontalPlayerState
     MovingRight
 };
 
+enum class FacingDirection
+{
+    Left,
+    Right
+};
+
 enum class VerticalPlayerState
 {
     Standing,
@@ -37,12 +43,20 @@ private:
     sf::Vector2f movement;
     sf::Vector2f velocity;
     sf::Vector2f spawnPosition;
-    
+
     float standardHeight;
     float crouchingHeight;
 
     HorizontalPlayerState horizontalState;
     VerticalPlayerState verticalState;
+
+    //Attack: the player only knows ITS attack, not who it will hit
+    FacingDirection facing = FacingDirection::Right;
+    bool attacking = false;
+    float attackTimer = 0.f;      // time left until the next attack
+    float attackCooldown = 0.3f;   // pause between two attacks
+    float attackRange = 40.f;
+    int attackDamage = 10;
 
     bool tryVerticalStateTransition(VerticalPlayerState nextState);
     bool tryHorizontalStateTransition(HorizontalPlayerState nextState);
@@ -69,6 +83,14 @@ public:
     void takeDamage(int damage);
     int getHealth() const;
     void resetHealth();
+    int getMaxHealth() const;
+
+    
+    void attack();
+    bool isAttacking() const;
+    void finishAttack();
+    sf::FloatRect getAttackBounds() const;
+    int getAttackDamage() const;
 
     void setAlive(bool value);
     bool isAlive() const;

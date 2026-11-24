@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-// Clanovi su navedeni istim redom kao u Player.h
+// Members are listed in the same order as in Player.h
 Player::Player(const PlayerConfig& config)
     : name(config.name),
     speed(config.speed),
@@ -48,42 +48,36 @@ bool Player::tryVerticalStateTransition(VerticalPlayerState nextState)
         nextState == VerticalPlayerState::Jumping)
     {
         verticalState = nextState;
-        //std::cout << "Jumping STATE";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Falling &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
-        //std::cout << "Jumping Stanting";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Jumping &&
         nextState == VerticalPlayerState::Falling)
     {
         verticalState = nextState;
-        //std::cout << "Jumping FAlling";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Standing &&
         nextState == VerticalPlayerState::Falling)
     {
         verticalState = nextState;
-        //std::cout << "Jumping FAlling from Standing";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Standing &&
         nextState == VerticalPlayerState::Crouching)
     {
         verticalState = nextState;
-        //std::cout << "Jumping Crouching";
         return true;
     }
     else if (verticalState == VerticalPlayerState::Crouching &&
         nextState == VerticalPlayerState::Standing)
     {
         verticalState = nextState;
-        //std::cout << "Jumping Standing";
         return true;
     }
 
@@ -125,12 +119,11 @@ void Player::moveLeft()
     if (!isCrouching())
     {
         movement.x -= speed;
+        facing = FacingDirection::Left;
 
         tryHorizontalStateTransition(
             HorizontalPlayerState::MovingLeft
         );
-
-        //std::cout << "MoveLeft!!!\n";
     }
 }
 
@@ -139,12 +132,11 @@ void Player::moveRight()
     if (!isCrouching())
     {
         movement.x += speed;
+        facing = FacingDirection::Right;
 
         tryHorizontalStateTransition(
             HorizontalPlayerState::MovingRight
         );
-
-        //std::cout << "MoveRight!!!\n";
     }
 }
 
@@ -155,8 +147,6 @@ void Player::jump()
     ))
     {
         velocity.y = jumpForce;
-
-        //std::cout << "State Jump!!!\n";
     }
 }
 
@@ -179,8 +169,6 @@ void Player::startCrouch()
             shape.getPosition().x,
             bottom - crouchingHeight
             });
-
-        //std::cout << "CrouchStart!!!\n";
     }
 }
 
@@ -205,8 +193,6 @@ void Player::stopCrouch()
                 shape.getPosition().x,
                 bottom - standardHeight
                 });
-
-            //std::cout << "CrouchEnd!!!\n";
         }
     }
 }
@@ -222,13 +208,18 @@ void Player::resetInput()
 
 void Player::update(float dt)
 {
+    // Count down until the next attack is allowed
+    if (attackTimer > 0.f)
+    {
+        attackTimer -= dt;
+    }
 
     // Gravity
     velocity.y += gravity * dt;
 
     if (velocity.y > 0.f &&
         (verticalState == VerticalPlayerState::Jumping ||
-        verticalState == VerticalPlayerState::Standing))
+            verticalState == VerticalPlayerState::Standing))
     {
         tryVerticalStateTransition(
             VerticalPlayerState::Falling
@@ -239,13 +230,13 @@ void Player::update(float dt)
     shape.move({
         movement.x * dt,
         0.f
-    });
+        });
 
     // Vertical movement
     shape.move({
         0.f,
         velocity.y * dt
-    });
+        });
 }
 
 void Player::landOn(float surfaceY)
@@ -253,7 +244,7 @@ void Player::landOn(float surfaceY)
     shape.setPosition({
         shape.getPosition().x,
         surfaceY - shape.getSize().y
-    });
+        });
 
     velocity.y = 0.f;
 
@@ -286,9 +277,23 @@ sf::Vector2f Player::getPosition() const
 
 void Player::loseLife()
 {
+    if (!alive)
+    {
+        return;
+    }
+
+    lives--;
+    std::cout << name << " lives: " << lives << '\n';
+
     if (lives > 0)
     {
-        lives--;
+        resetHealth();
+        resetPosition();
+    }
+    else
+    {
+        alive = false;
+        std::cout << name << " is out!\n";
     }
 }
 
@@ -301,9 +306,11 @@ void Player::takeDamage(int damage)
 {
     health -= damage;
 
-    if (health < 0)
+    // The player decides what happens when HP runs out
+    if (health <= 0)
     {
         health = 0;
+        loseLife();
     }
 }
 
@@ -315,6 +322,50 @@ int Player::getHealth() const
 void Player::resetHealth()
 {
     health = maxHealth;
+}
+
+int Player::getMaxHealth() const
+{
+    return maxHealth;
+}
+
+void Player::attack()
+{
+    // Dead players can't attack, and not during cooldown
+    if (!alive || attackTimer > 0.f)
+    {
+        return;
+    }
+
+    attacking = true;
+    attackTimer = attackCooldown;
+}
+
+bool Player::isAttacking() const
+{
+    return attacking;
+}
+
+void Player::finishAttack()
+{
+    attacking = false;
+}
+
+sf::FloatRect Player::getAttackBounds() const
+{
+    const sf::FloatRect body = getBounds();
+
+    // A box in front of the player, on the side it is facing
+    const float x = (facing == FacingDirection::Right)
+        ? body.position.x + body.size.x
+        : body.position.x - attackRange;
+
+    return sf::FloatRect({ x, body.position.y }, { attackRange, body.size.y });
+}
+
+int Player::getAttackDamage() const
+{
+    return attackDamage;
 }
 
 sf::FloatRect Player::getBounds() const
@@ -339,6 +390,5 @@ void Player::render(sf::RenderWindow& m_Window)
 
 bool Player::isMovingDown() const
 {
-    return velocity.y >= 0.f;;
+    return velocity.y >= 0.f;
 }
-
