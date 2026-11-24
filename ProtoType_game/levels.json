@@ -1,0 +1,38 @@
+{
+  "levels": [
+    {
+      "name": "Classic",
+      "background": [0, 0, 0],
+      "platformColor": [0, 200, 0],
+      "platforms": [
+        { "x": 100, "y": 500, "width": 600, "height": 40 },
+        { "x": 100, "y": 380, "width": 250, "height": 25 },
+        { "x": 450, "y": 260, "width": 250, "height": 25 }
+      ]
+    },
+    {
+      "name": "Bubblegum",
+      "background": [255, 214, 232],
+      "platformColor": [232, 84, 150],
+      "platforms": [
+        { "x": 60, "y": 500, "width": 300, "height": 30 },
+        { "x": 440, "y": 500, "width": 300, "height": 30 },
+        { "x": 300, "y": 390, "width": 200, "height": 20 },
+        { "x": 80, "y": 280, "width": 180, "height": 20 },
+        { "x": 540, "y": 280, "width": 180, "height": 20 }
+      ]
+    },
+    {
+      "name": "Night",
+      "background": [20, 24, 48],
+      "platformColor": [120, 130, 200],
+      "platforms": [
+        { "x": 100, "y": 520, "width": 600, "height": 30 },
+        { "x": 250, "y": 420, "width": 300, "height": 20 },
+        { "x": 100, "y": 320, "width": 150, "height": 20 },
+        { "x": 550, "y": 320, "width": 150, "height": 20 },
+        { "x": 325, "y": 220, "width": 150, "height": 20 }
+      ]
+    }
+  ]
+}

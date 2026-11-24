@@ -149,6 +149,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config\GameState.h" />
+    <ClInclude Include="Config\LevelConfig.h" />
+    <ClInclude Include="Core\GameSettings.h" />
     <ClInclude Include="States\GameOver.h" />
     <ClInclude Include="States\MenuState.h" />
     <ClInclude Include="States\PauseState.h" />

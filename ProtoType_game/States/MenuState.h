@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "LevelConfig.h"
 #include <string>
 #include <vector>
 
@@ -22,8 +23,11 @@ private:
 
     void handleKey(sf::Keyboard::Key key);
     void confirmSelection();
+    void changeLevel(int direction);
 
     std::vector<MenuOption> options;
     int selectedIndex = 0;
     std::string message;
+
+    std::vector<LevelConfig> levels;
 };

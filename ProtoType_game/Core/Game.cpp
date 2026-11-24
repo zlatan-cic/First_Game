@@ -127,6 +127,11 @@ sf::RenderWindow& Game::getWindow()
     return m_Window;
 }
 
+GameSettings& Game::getSettings()
+{
+    return settings;
+}
+
 void Game::drawCenteredText(const std::string& message, float y, unsigned int size, sf::Color color)
 {
     sf::Text text(font, message, size);

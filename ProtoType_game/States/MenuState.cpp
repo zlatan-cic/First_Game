@@ -1,6 +1,7 @@
 #include "MenuState.h"
 #include "Game.h"
 #include "PlayState.h"
+#include "ConfigLoader.h"
 
 MenuState::MenuState(Game& game) : State(game)
 {}
@@ -16,6 +17,14 @@ void MenuState::init()
 
     selectedIndex = 0;
     message.clear();
+
+    levels = loadLevelConfigs("levels.json");
+
+    // The remembered level may not exist anymore (e.g. levels.json changed)
+    if (game.getSettings().levelIndex >= levels.size())
+    {
+        game.getSettings().levelIndex = 0;
+    }
 }
 
 void MenuState::handleEvent(const sf::Event& event)
@@ -42,6 +51,14 @@ void MenuState::handleKey(sf::Keyboard::Key key)
         selectedIndex = (selectedIndex + 1) % optionCount;
         message.clear();
     }
+    else if (key == sf::Keyboard::Key::Left || key == sf::Keyboard::Key::A)
+    {
+        changeLevel(-1);
+    }
+    else if (key == sf::Keyboard::Key::Right || key == sf::Keyboard::Key::D)
+    {
+        changeLevel(1);
+    }
     else if (key == sf::Keyboard::Key::Enter)
     {
         confirmSelection();
@@ -63,12 +80,25 @@ void MenuState::confirmSelection()
     else if (option.label == "Player vs Player")
     {
         // New game = new PlayState, everything is created fresh in its init()
-        game.changeState(std::make_unique<PlayState>(game));
+        const LevelConfig& level = levels[game.getSettings().levelIndex];
+        game.changeState(std::make_unique<PlayState>(game, level));
     }
     else if (option.label == "Exit")
     {
         game.getWindow().close();
     }
+}
+
+void MenuState::changeLevel(int direction)
+{
+    const int levelCount = static_cast<int>(levels.size());
+    const int current = static_cast<int>(game.getSettings().levelIndex);
+
+    // Same wrap-around trick as the menu options
+    const int next = (current + direction + levelCount) % levelCount;
+
+    game.getSettings().levelIndex = static_cast<std::size_t>(next);
+    message.clear();
 }
 
 void MenuState::update(float)
@@ -84,7 +114,10 @@ void MenuState::draw(sf::RenderWindow&)
     const sf::Color hint(180, 178, 169);
 
     game.drawCenteredText("First Game", 120.f, 56, normal);
-    game.drawCenteredText("Welcome! Choose game mode", 185.f, 20, hint);
+    game.drawCenteredText("Welcome! Choose game mode", 175.f, 20, hint);
+
+    const LevelConfig& level = levels[game.getSettings().levelIndex];
+    game.drawCenteredText("Level: < " + level.name + " >", 215.f, 22, normal);
 
     const float startY = 260.f;
     const float spacing = 50.f;
@@ -115,5 +148,6 @@ void MenuState::draw(sf::RenderWindow&)
         game.drawCenteredText(message, 480.f, 20, selected);
     }
 
-    game.drawCenteredText("Up/Down - choose    Enter - confirm", 550.f, 16, hint);
+    game.drawCenteredText("Left/Right - level", 525.f, 16, hint);
+    game.drawCenteredText("Up/Down - choose    Enter - confirm", 555.f, 16, hint);
 }

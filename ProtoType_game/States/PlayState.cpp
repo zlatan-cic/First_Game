@@ -6,7 +6,9 @@
 #include <iostream>
 #include <string>
 
-PlayState::PlayState(Game& game) : State(game)
+PlayState::PlayState(Game& game, const LevelConfig& level)
+    : State(game),
+    level(level)
 {}
 
 void PlayState::init()
@@ -73,22 +75,20 @@ void PlayState::initInput()
 
 void PlayState::initPlatforms()
 {
+    // Background fills the whole window in the level's color
+    background.setSize(sf::Vector2f(game.getWindow().getSize()));
+    background.setFillColor(level.background);
+
+    // Platforms come from the level, not from code
     platforms.clear();
 
-    sf::RectangleShape floor({ 600.f, 40.f });
-    floor.setPosition({ 100.f, 500.f });
-    floor.setFillColor(sf::Color::Green);
-    platforms.push_back(floor);
-
-    sf::RectangleShape platform1({ 250.f, 25.f });
-    platform1.setPosition({ 100.f, 380.f });
-    platform1.setFillColor(sf::Color::Green);
-    platforms.push_back(platform1);
-
-    sf::RectangleShape platform2({ 250.f, 25.f });
-    platform2.setPosition({ 450.f, 260.f });
-    platform2.setFillColor(sf::Color::Green);
-    platforms.push_back(platform2);
+    for (const PlatformConfig& platformConfig : level.platforms)
+    {
+        sf::RectangleShape platform(platformConfig.size);
+        platform.setPosition(platformConfig.position);
+        platform.setFillColor(level.platformColor);
+        platforms.push_back(platform);
+    }
 }
 
 void PlayState::initUI()
@@ -257,6 +257,8 @@ void PlayState::checkGameOver()
 
 void PlayState::draw(sf::RenderWindow& window)
 {
+    window.draw(background);
+
     for (const auto& platform : platforms)
     {
         window.draw(platform);

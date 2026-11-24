@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "State.h"
+#include "GameSettings.h"
 
 class Game
 {
@@ -19,6 +20,7 @@ public:
     void changeState(std::unique_ptr<State> state); // remove all, keep only the new one
 
     sf::RenderWindow& getWindow();
+    GameSettings& getSettings();
 
     void drawCenteredText(const std::string& message, float y, unsigned int size,
         sf::Color color = sf::Color::White);
@@ -39,6 +41,7 @@ private:
 
     sf::RenderWindow m_Window;
     sf::Font font;
+    GameSettings settings;
 
     // State stack: the last one in the list is active (on top)
     std::vector<std::unique_ptr<State>> states;

@@ -5,13 +5,14 @@
 #include "PlayerController.h"
 #include "InputSystem.h"
 #include "CollisionSystem.h"
+#include "LevelConfig.h"
 #include <cstddef>
 #include <vector>
 
 class PlayState : public State
 {
 public:
-    explicit PlayState(Game& game);
+    PlayState(Game& game, const LevelConfig& level);
 
     void init() override;
     void handleEvent(const sf::Event& event) override;
@@ -32,6 +33,8 @@ private:
 
     static constexpr std::size_t playerCount = 2;
 
+    LevelConfig level;
+
     InputSystem inputSystem;
     CollisionSystem collisionSystem;
 
@@ -39,6 +42,7 @@ private:
     std::vector<Player> players;
     std::vector<PlayerController> controllers;
 
+    sf::RectangleShape background;
     std::vector<sf::RectangleShape> platforms;
 
     std::vector<sf::RectangleShape> healthBars;
